@@ -22,14 +22,15 @@ contract GovTrack {
         string name;
         bool isRegistered;
     }
-    mapping(address => Applicant) addressToApplicant;
+    mapping(address => Applicant) public addressToApplicant;
     
     struct Project {
         address owner;
         address project;
         string name;
+        bool isRegistered;
     }
-    mapping(address => Project) addressToProject;
+    mapping(address => Project) public addressToProject;
     
     struct Grant {
         address grantor;
@@ -37,6 +38,7 @@ contract GovTrack {
         string name;
         uint256 amountAvailable;
         GrantStatus status;
+        bool isRegistered;
     }
     uint256 grantCounter;
 
@@ -47,7 +49,7 @@ contract GovTrack {
         string name;
         bool isRegistered;
     }
-    mapping(address => Grantor) addressToGrantor;
+    mapping(address => Grantor) public addressToGrantor;
     
     struct GrantRequest {
         uint256 id;
@@ -57,7 +59,7 @@ contract GovTrack {
         RequestStatus status;
     }
     uint256 requestCounter;
-    GrantRequest[] requests;
+    GrantRequest[] public requests;
     
     enum RequestStatus {
         Created,
@@ -70,11 +72,10 @@ contract GovTrack {
         Closed
     }
 
-
     function getAllGrants() public view returns(Grant[] memory) {
         return grants;
     }
-  
+
     function registerAsApplicant(string memory _name) public {
         require(!addressToApplicant[msg.sender].isRegistered, "You already registered as an applicant");
         
@@ -96,34 +97,38 @@ contract GovTrack {
         });
         addressToGrantor[newGrantor.grantor] = newGrantor;
     }
-    
+
+    function createProject(address payable _project, string memory _name) public {
+        require(addressToApplicant[msg.sender].isRegistered, "You have not registered as an applicant");
+        require(!addressToProject[_project].isRegistered, "Project has been registered");
+
+        Project memory newProject = Project({
+            owner: msg.sender,
+            project: _project,
+            name: _name,
+            isRegistered: true
+        });
+        addressToProject[_project] = newProject;
+    }
+
     function createGrant(string memory _name, uint256 _amountInUsd) public payable {
-        require(msg.value >= usdToWei(_amountInUsd), "Value does not match");
         require(addressToGrantor[msg.sender].isRegistered, "You have not registered as a grantor");
+        require(msg.value >= usdToWei(_amountInUsd), "Value does not match");
         
         Grant memory newGrant = Grant({
             grantor: msg.sender,
             id: grantCounter,
             name: _name,
             amountAvailable: msg.value,
-            status: GrantStatus.Open
+            status: GrantStatus.Open,
+            isRegistered: true
         });
         grantCounter+=1;
         grants.push(newGrant);
     }
     
-    function createProject(address payable _project, string memory _name) public {
-        require(addressToApplicant[msg.sender].isRegistered, "You have not registered as an applicant");
-        
-        Project memory newProject = Project({
-            owner: msg.sender,
-            project: _project,
-            name: _name
-        });
-        addressToProject[_project] = newProject;
-    }
-    
     function requestGrant(address payable _project, uint256 _grantId, uint256 _amountInUsd) public {
+        require(grants[_grantId].isRegistered, "Grant does not exist");
         require(addressToApplicant[msg.sender].isRegistered, "You have not registered as an applicant");
         require(addressToProject[_project].owner == msg.sender, "You do not own this project");
         
@@ -163,10 +168,7 @@ contract GovTrack {
         grant.status = GrantStatus.Closed;
     }
     
-    /**
-     * Returns the latest price
-     */
-    function getUsdPerEth() public view returns (uint256) {
+    function getUsdPerEth() private view returns (uint256) {
         (
             uint80 roundID, 
             int price,

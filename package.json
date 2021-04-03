@@ -18,5 +18,11 @@
   "bugs": {
     "url": "https://github.com/xrenegad3/govtrack/issues"
   },
-  "homepage": "https://github.com/xrenegad3/govtrack#readme"
+  "homepage": "https://github.com/xrenegad3/govtrack#readme",
+  "dependencies": {
+    "@chainlink/contracts": "^0.1.6",
+    "@truffle/hdwallet-provider": "^1.2.6",
+    "chai": "^4.3.4",
+    "dotenv": "^8.2.0"
+  }
 }
