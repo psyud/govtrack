@@ -5,6 +5,8 @@ contract("Grantor Registration", accounts => {
         const grantor = accounts[0];
         const grantorName = "Mom's spaghetti";
         const inst = await GovTrack.deployed();
+
+        await inst.registerAsGrantor(grantorName, { from: grantor });
       
         const deployedGrantor = await inst.addressToGrantor(grantor);
         
