@@ -7,7 +7,12 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "sg-codegen": "cd subgraph && graph codegen",
+    "sg-build": "cd subgraph && graph build",
+    "sg-deploy": "cd subgraph && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ xrenegad3/govtrack",
+    "sg-create-local": "graph create --node http://localhost:8020/ xrenegad3/govtrack",
+    "sg-remove-local": "graph remove --node http://localhost:8020/ xrenegad3/govtrack",
+    "sg-deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 xrenegad3/govtrack"
   },
   "repository": {
     "type": "git",
@@ -23,6 +28,8 @@
     "@chainlink/contracts": "^0.1.6",
     "@truffle/hdwallet-provider": "^1.2.6",
     "chai": "^4.3.4",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "@graphprotocol/graph-cli": "0.20.0",
+    "@graphprotocol/graph-ts": "0.20.0"
   }
 }

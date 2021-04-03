@@ -23,6 +23,7 @@ contract GovTrack {
         bool isRegistered;
     }
     mapping(address => Applicant) public addressToApplicant;
+    event NewApplicant(address applicant, string name);
     
     struct Project {
         address owner;
@@ -31,6 +32,15 @@ contract GovTrack {
         bool isRegistered;
     }
     mapping(address => Project) public addressToProject;
+    event NewProject(address owner, address project, string name);
+    
+    struct Grantor {
+        address grantor;
+        string name;
+        bool isRegistered;
+    }
+    mapping(address => Grantor) public addressToGrantor;
+    event NewGrantor(address grantor, string name);
     
     struct Grant {
         address grantor;
@@ -41,15 +51,9 @@ contract GovTrack {
         bool isRegistered;
     }
     uint256 grantCounter;
-
     Grant[] grants;
-    
-    struct Grantor {
-        address grantor;
-        string name;
-        bool isRegistered;
-    }
-    mapping(address => Grantor) public addressToGrantor;
+    event NewGrant(address grantor, uint256 id, string name, uint256 amountAvailable);
+    event UpdateGrant(uint256 id, uint256 amountAvailable, GrantStatus status);
     
     struct GrantRequest {
         uint256 id;
@@ -60,6 +64,9 @@ contract GovTrack {
     }
     uint256 requestCounter;
     GrantRequest[] public requests;
+    event NewGrantRequest(uint256 id, address project, uint256 grantId, uint256 amountInUsd);
+    event UpdateGrantRequest(uint256 id, RequestStatus status);
+            
     
     enum RequestStatus {
         Created,
@@ -85,6 +92,7 @@ contract GovTrack {
             isRegistered: true
         });
         addressToApplicant[newApplicant.applicant] = newApplicant;
+        emit NewApplicant(newApplicant.applicant, newApplicant.name);
     }
     
     function registerAsGrantor(string memory _name) public {
@@ -96,6 +104,7 @@ contract GovTrack {
             isRegistered: true
         });
         addressToGrantor[newGrantor.grantor] = newGrantor;
+        emit NewGrantor(newGrantor.grantor, newGrantor.name);
     }
 
     function createProject(address payable _project, string memory _name) public {
@@ -109,6 +118,7 @@ contract GovTrack {
             isRegistered: true
         });
         addressToProject[_project] = newProject;
+        emit NewProject(newProject.owner, newProject.project, newProject.name);
     }
 
     function createGrant(string memory _name, uint256 _amountInUsd) public payable {
@@ -125,6 +135,7 @@ contract GovTrack {
         });
         grantCounter+=1;
         grants.push(newGrant);
+        emit NewGrant(newGrant.grantor, newGrant.id, newGrant.name, newGrant.amountAvailable);
     }
     
     function requestGrant(address payable _project, uint256 _grantId, uint256 _amountInUsd) public {
@@ -141,6 +152,7 @@ contract GovTrack {
         });
         requestCounter += 1;
         requests.push(newGrantRequest);
+        emit NewGrantRequest(newGrantRequest.id, newGrantRequest.project, newGrantRequest.grantId, newGrantRequest.amountInUsd);
     }
     
     function resolveRequest(uint256 _requestId, bool isApproved) public {
@@ -158,6 +170,9 @@ contract GovTrack {
             request.status = RequestStatus.Approved;
             
             grant.amountAvailable -= amountInWei;
+            
+            emit UpdateGrantRequest(request.id, request.status);
+            emit UpdateGrant(grant.id, grant.amountAvailable, grant.status);
         }else {
             request.status = RequestStatus.Denied;
         }
@@ -166,6 +181,8 @@ contract GovTrack {
     function closeGrant(uint256 _grantId) isGrantOwner(_grantId) public {
         Grant storage grant = grants[_grantId];
         grant.status = GrantStatus.Closed;
+        
+        emit UpdateGrant(grant.id, grant.amountAvailable, grant.status);
     }
     
     function getUsdPerEth() private view returns (uint256) {
