@@ -1,0 +1,22 @@
+{
+  "name": "govtrack",
+  "version": "1.0.0",
+  "description": "Apply for goverment grants",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xrenegad3/govtrack.git"
+  },
+  "author": "Renegade",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/xrenegad3/govtrack/issues"
+  },
+  "homepage": "https://github.com/xrenegad3/govtrack#readme"
+}
