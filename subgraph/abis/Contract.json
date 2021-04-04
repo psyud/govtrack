@@ -194,6 +194,21 @@
         "type": "string"
       },
       {
+        "internalType": "string",
+        "name": "phoneNumber",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "emailAddress",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "physicalAddress",
+        "type": "string"
+      },
+      {
         "internalType": "bool",
         "name": "isRegistered",
         "type": "bool"
@@ -219,7 +234,12 @@
       },
       {
         "internalType": "string",
-        "name": "name",
+        "name": "agencyName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "agencyCode",
         "type": "string"
       },
       {
@@ -254,6 +274,11 @@
       {
         "internalType": "string",
         "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "description",
         "type": "string"
       },
       {
@@ -326,6 +351,11 @@
             "type": "string"
           },
           {
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
+          },
+          {
             "internalType": "uint256",
             "name": "amountAvailable",
             "type": "uint256"
@@ -355,6 +385,21 @@
         "internalType": "string",
         "name": "_name",
         "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_phoneNumber",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_emailAddress",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_physicalAddress",
+        "type": "string"
       }
     ],
     "name": "registerAsApplicant",
@@ -366,7 +411,12 @@
     "inputs": [
       {
         "internalType": "string",
-        "name": "_name",
+        "name": "_agencyName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_agencyCode",
         "type": "string"
       }
     ],
@@ -386,6 +436,11 @@
         "internalType": "string",
         "name": "_name",
         "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_description",
+        "type": "string"
       }
     ],
     "name": "createProject",
@@ -398,6 +453,11 @@
       {
         "internalType": "string",
         "name": "_name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_description",
         "type": "string"
       },
       {
