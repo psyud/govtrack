@@ -23,7 +23,7 @@ export class NewApplicant__Params {
     this._event = event;
   }
 
-  get applicant(): Address {
+  get id(): Address {
     return this._event.parameters[0].value.toAddress();
   }
 
@@ -45,12 +45,12 @@ export class NewGrant__Params {
     this._event = event;
   }
 
-  get grantor(): Address {
-    return this._event.parameters[0].value.toAddress();
+  get id(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
   }
 
-  get id(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
+  get grantor(): Address {
+    return this._event.parameters[1].value.toAddress();
   }
 
   get name(): string {
@@ -105,7 +105,7 @@ export class NewGrantor__Params {
     this._event = event;
   }
 
-  get grantor(): Address {
+  get id(): Address {
     return this._event.parameters[0].value.toAddress();
   }
 
@@ -127,11 +127,11 @@ export class NewProject__Params {
     this._event = event;
   }
 
-  get owner(): Address {
+  get id(): Address {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get project(): Address {
+  get owner(): Address {
     return this._event.parameters[1].value.toAddress();
   }
 
@@ -292,12 +292,12 @@ export class Contract__requestsResult {
 }
 
 export class Contract__getAllGrantsResultValue0Struct extends ethereum.Tuple {
-  get grantor(): Address {
-    return this[0].toAddress();
+  get id(): BigInt {
+    return this[0].toBigInt();
   }
 
-  get id(): BigInt {
-    return this[1].toBigInt();
+  get grantor(): Address {
+    return this[1].toAddress();
   }
 
   get name(): string {
@@ -469,7 +469,7 @@ export class Contract extends ethereum.SmartContract {
   getAllGrants(): Array<Contract__getAllGrantsResultValue0Struct> {
     let result = super.call(
       "getAllGrants",
-      "getAllGrants():((address,uint256,string,uint256,uint8,bool)[])",
+      "getAllGrants():((uint256,address,string,uint256,uint8,bool)[])",
       []
     );
 
@@ -481,7 +481,7 @@ export class Contract extends ethereum.SmartContract {
   > {
     let result = super.tryCall(
       "getAllGrants",
-      "getAllGrants():((address,uint256,string,uint256,uint8,bool)[])",
+      "getAllGrants():((uint256,address,string,uint256,uint8,bool)[])",
       []
     );
     if (result.reverted) {

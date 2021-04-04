@@ -10,7 +10,7 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "applicant",
+        "name": "id",
         "type": "address"
       },
       {
@@ -28,15 +28,15 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "grantor",
-        "type": "address"
-      },
-      {
-        "indexed": false,
         "internalType": "uint256",
         "name": "id",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "grantor",
+        "type": "address"
       },
       {
         "indexed": false,
@@ -91,7 +91,7 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "grantor",
+        "name": "id",
         "type": "address"
       },
       {
@@ -110,13 +110,13 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "owner",
+        "name": "id",
         "type": "address"
       },
       {
         "indexed": false,
         "internalType": "address",
-        "name": "project",
+        "name": "owner",
         "type": "address"
       },
       {
@@ -185,7 +185,7 @@
     "outputs": [
       {
         "internalType": "address",
-        "name": "applicant",
+        "name": "id",
         "type": "address"
       },
       {
@@ -214,7 +214,7 @@
     "outputs": [
       {
         "internalType": "address",
-        "name": "grantor",
+        "name": "id",
         "type": "address"
       },
       {
@@ -243,12 +243,12 @@
     "outputs": [
       {
         "internalType": "address",
-        "name": "owner",
+        "name": "id",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "project",
+        "name": "owner",
         "type": "address"
       },
       {
@@ -311,14 +311,14 @@
       {
         "components": [
           {
-            "internalType": "address",
-            "name": "grantor",
-            "type": "address"
-          },
-          {
             "internalType": "uint256",
             "name": "id",
             "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "grantor",
+            "type": "address"
           },
           {
             "internalType": "string",
