@@ -20,6 +20,9 @@ contract GovTrack {
     struct Applicant {
         address id;
         string name;
+        string phoneNumber;
+        string emailAddress;
+        string physicalAddress;
         bool isRegistered;
     }
     mapping(address => Applicant) public addressToApplicant;
@@ -29,6 +32,7 @@ contract GovTrack {
         address id;
         address owner;
         string name;
+        string description;
         bool isRegistered;
     }
     mapping(address => Project) public addressToProject;
@@ -36,7 +40,8 @@ contract GovTrack {
     
     struct Grantor {
         address id;
-        string name;
+        string agencyName;
+        string agencyCode;
         bool isRegistered;
     }
     mapping(address => Grantor) public addressToGrantor;
@@ -46,6 +51,7 @@ contract GovTrack {
         uint256 id;
         address grantor;
         string name;
+        string description;
         uint256 amountAvailable;
         GrantStatus status;
         bool isRegistered;
@@ -83,31 +89,35 @@ contract GovTrack {
         return grants;
     }
 
-    function registerAsApplicant(string memory _name) public {
+    function registerAsApplicant(string memory _name, string memory _phoneNumber, string memory _emailAddress, string memory _physicalAddress) public {
         require(!addressToApplicant[msg.sender].isRegistered, "You already registered as an applicant");
         
         Applicant memory newApplicant = Applicant({
             id: msg.sender,
             name: _name,
+            phoneNumber: _phoneNumber,
+            emailAddress: _emailAddress,
+            physicalAddress: _physicalAddress,
             isRegistered: true
         });
         addressToApplicant[newApplicant.id] = newApplicant;
         emit NewApplicant(newApplicant.id, newApplicant.name);
     }
     
-    function registerAsGrantor(string memory _name) public {
+    function registerAsGrantor(string memory _agencyName, string memory _agencyCode) public {
         require(!addressToGrantor[msg.sender].isRegistered, "You already registered as a grantor");
         
         Grantor memory newGrantor = Grantor({
             id: msg.sender,
-            name: _name,
+            agencyName: _agencyName,
+            agencyCode: _agencyCode,
             isRegistered: true
         });
         addressToGrantor[newGrantor.id] = newGrantor;
-        emit NewGrantor(newGrantor.id, newGrantor.name);
+        emit NewGrantor(newGrantor.id, newGrantor.agencyName);
     }
 
-    function createProject(address payable _project, string memory _name) public {
+    function createProject(address payable _project, string memory _name, string memory _description) public {
         require(addressToApplicant[msg.sender].isRegistered, "You have not registered as an applicant");
         require(!addressToProject[_project].isRegistered, "Project has been registered");
 
@@ -115,13 +125,14 @@ contract GovTrack {
             id: _project,
             owner: msg.sender,
             name: _name,
+            description: _description,
             isRegistered: true
         });
         addressToProject[_project] = newProject;
         emit NewProject(newProject.id, newProject.owner, newProject.name);
     }
 
-    function createGrant(string memory _name, uint256 _amountInUsd) public payable {
+    function createGrant(string memory _name, string memory _description, uint256 _amountInUsd) public payable {
         require(addressToGrantor[msg.sender].isRegistered, "You have not registered as a grantor");
         require(msg.value >= usdToWei(_amountInUsd), "Value does not match");
         
@@ -129,6 +140,7 @@ contract GovTrack {
             id: grantCounter,
             grantor: msg.sender,
             name: _name,
+            description: _description,
             amountAvailable: msg.value,
             status: GrantStatus.Open,
             isRegistered: true

@@ -7,14 +7,15 @@ contract("Project Creation", accounts => {
         const projectName = 'project_name';
         const inst = await GovTrack.deployed();
 
-        await inst.registerAsApplicant('name', { from: applicant });
-        await inst.createProject(project, projectName, { from: applicant });
+        await inst.registerAsApplicant('name', '', '', '', { from: applicant });
+        await inst.createProject(project, projectName, 'desc', { from: applicant });
 
         const deployedProject = await inst.addressToProject(project);
 
         expect(deployedProject.id).to.equal(project);
-        expect(deployedProject.owner).to.equal(applicant);
         expect(deployedProject.name).to.equal(projectName);
+        expect(deployedProject.description).to.equal('desc');
+        expect(deployedProject.owner).to.equal(applicant);
     })
 })
 
@@ -25,7 +26,7 @@ contract("Project Creation Exceptions", accounts => {
         const inst = await GovTrack.deployed();
 
         try {
-            await inst.createProject(project, 'something', { from: applicant });
+            await inst.createProject(project, 'something', 'desc', { from: applicant });
         }catch(e) {
             expect(e.message).to.contain('You have not registered as an applicant');
         }
@@ -36,7 +37,7 @@ contract("Project Creation Exceptions", accounts => {
         const project = accounts[1];
         const inst = await GovTrack.deployed();
 
-        await inst.registerAsApplicant('name', { from: applicant });
+        await inst.registerAsApplicant('name', '', '', '', { from: applicant });
         await inst.createProject(project, 'something', { from: applicant });
 
         try {
