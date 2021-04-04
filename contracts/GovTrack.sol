@@ -18,33 +18,33 @@ contract GovTrack {
     }
     
     struct Applicant {
-        address applicant;
+        address id;
         string name;
         bool isRegistered;
     }
     mapping(address => Applicant) public addressToApplicant;
-    event NewApplicant(address applicant, string name);
+    event NewApplicant(address id, string name);
     
     struct Project {
+        address id;
         address owner;
-        address project;
         string name;
         bool isRegistered;
     }
     mapping(address => Project) public addressToProject;
-    event NewProject(address owner, address project, string name);
+    event NewProject(address id, address owner, string name);
     
     struct Grantor {
-        address grantor;
+        address id;
         string name;
         bool isRegistered;
     }
     mapping(address => Grantor) public addressToGrantor;
-    event NewGrantor(address grantor, string name);
+    event NewGrantor(address id, string name);
     
     struct Grant {
-        address grantor;
         uint256 id;
+        address grantor;
         string name;
         uint256 amountAvailable;
         GrantStatus status;
@@ -52,7 +52,7 @@ contract GovTrack {
     }
     uint256 grantCounter;
     Grant[] grants;
-    event NewGrant(address grantor, uint256 id, string name, uint256 amountAvailable);
+    event NewGrant(uint256 id, address grantor, string name, uint256 amountAvailable);
     event UpdateGrant(uint256 id, uint256 amountAvailable, GrantStatus status);
     
     struct GrantRequest {
@@ -87,24 +87,24 @@ contract GovTrack {
         require(!addressToApplicant[msg.sender].isRegistered, "You already registered as an applicant");
         
         Applicant memory newApplicant = Applicant({
-            applicant: msg.sender,
+            id: msg.sender,
             name: _name,
             isRegistered: true
         });
-        addressToApplicant[newApplicant.applicant] = newApplicant;
-        emit NewApplicant(newApplicant.applicant, newApplicant.name);
+        addressToApplicant[newApplicant.id] = newApplicant;
+        emit NewApplicant(newApplicant.id, newApplicant.name);
     }
     
     function registerAsGrantor(string memory _name) public {
         require(!addressToGrantor[msg.sender].isRegistered, "You already registered as a grantor");
         
         Grantor memory newGrantor = Grantor({
-            grantor: msg.sender,
+            id: msg.sender,
             name: _name,
             isRegistered: true
         });
-        addressToGrantor[newGrantor.grantor] = newGrantor;
-        emit NewGrantor(newGrantor.grantor, newGrantor.name);
+        addressToGrantor[newGrantor.id] = newGrantor;
+        emit NewGrantor(newGrantor.id, newGrantor.name);
     }
 
     function createProject(address payable _project, string memory _name) public {
@@ -112,13 +112,13 @@ contract GovTrack {
         require(!addressToProject[_project].isRegistered, "Project has been registered");
 
         Project memory newProject = Project({
+            id: _project,
             owner: msg.sender,
-            project: _project,
             name: _name,
             isRegistered: true
         });
         addressToProject[_project] = newProject;
-        emit NewProject(newProject.owner, newProject.project, newProject.name);
+        emit NewProject(newProject.id, newProject.owner, newProject.name);
     }
 
     function createGrant(string memory _name, uint256 _amountInUsd) public payable {
@@ -126,8 +126,8 @@ contract GovTrack {
         require(msg.value >= usdToWei(_amountInUsd), "Value does not match");
         
         Grant memory newGrant = Grant({
-            grantor: msg.sender,
             id: grantCounter,
+            grantor: msg.sender,
             name: _name,
             amountAvailable: msg.value,
             status: GrantStatus.Open,
@@ -135,7 +135,7 @@ contract GovTrack {
         });
         grantCounter+=1;
         grants.push(newGrant);
-        emit NewGrant(newGrant.grantor, newGrant.id, newGrant.name, newGrant.amountAvailable);
+        emit NewGrant(newGrant.id, newGrant.grantor, newGrant.name, newGrant.amountAvailable);
     }
     
     function requestGrant(address payable _project, uint256 _grantId, uint256 _amountInUsd) public {

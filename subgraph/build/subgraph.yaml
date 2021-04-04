@@ -28,7 +28,7 @@ dataSources:
           handler: handleNewGrantor
         - event: NewProject(address,address,string)
           handler: handleNewProject
-        - event: NewGrant(address,uint256,string,uint256)
+        - event: NewGrant(uint256,address,string,uint256)
           handler: handleNewGrant
         - event: UpdateGrant(uint256,uint256,uint8)
           handler: handleUpdateGrant

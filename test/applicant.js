@@ -10,7 +10,7 @@ contract("Applicant Registration", accounts => {
 
         const deployedApplicant = await inst.addressToApplicant(applicant);
         
-        expect(deployedApplicant.applicant).to.equal(applicant);
+        expect(deployedApplicant.id).to.equal(applicant);
         expect(deployedApplicant.name).to.equal(applicantName);
         expect(deployedApplicant.isRegistered).to.be.true;
     })

@@ -10,7 +10,7 @@ contract("Grantor Registration", accounts => {
       
         const deployedGrantor = await inst.addressToGrantor(grantor);
         
-        expect(deployedGrantor.grantor).to.equal(grantor);
+        expect(deployedGrantor.id).to.equal(grantor);
         expect(deployedGrantor.name).to.equal(grantorName);
         expect(deployedGrantor.isRegistered).to.be.true;
     })

@@ -12,8 +12,8 @@ contract("Project Creation", accounts => {
 
         const deployedProject = await inst.addressToProject(project);
 
+        expect(deployedProject.id).to.equal(project);
         expect(deployedProject.owner).to.equal(applicant);
-        expect(deployedProject.project).to.equal(project);
         expect(deployedProject.name).to.equal(projectName);
     })
 })
