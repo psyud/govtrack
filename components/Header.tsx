@@ -63,8 +63,8 @@ export default class Header extends Component<IProps, IState>{
     render() {
         return (
             <Menu style={{ marginTop: '1em' }}>
-            <Menu.Item name='home'>
-                
+            <Menu.Item>
+                <Link href="/">Home</Link>
             </Menu.Item>
             
             <Menu.Menu position='right'>
