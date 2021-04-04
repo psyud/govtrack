@@ -1,9 +1,10 @@
+import Link from "next/link";
 import React, { Component } from "react";
 import { Button, Grid, Menu } from "semantic-ui-react";
-import GrantInfo from "../../components/GrantInfo";
-import Layout from "../../components/Layout"
+import GrantInfo from "../../../components/GrantInfo";
+import Layout from "../../../components/Layout"
 
-interface IProps {
+export interface IProps {
     id: any
 }
 
@@ -22,8 +23,12 @@ export default class GrantDetail extends Component<IProps>{
     render() {
         return <Layout>
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Button primary>View Applicants</Button>
-                <Button color='red'>Apply</Button>
+                <Link href="/grants/[id]/applicants" as={`/grants/${this.props.id}/applicants`}>
+                    <Button primary>View Applicants</Button>
+                </Link>
+                <Link href="/grants/[id]/apply" as={`/grants/${this.props.id}/apply`}>
+                    <Button color='red'>Apply</Button>
+                </Link>
             </div>
             <GrantInfo/>
         </Layout>
