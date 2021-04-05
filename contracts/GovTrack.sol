@@ -52,32 +52,31 @@ contract GovTrack {
         address grantor;
         string name;
         string description;
-        uint256 amountAvailable;
+        uint256 amountInWei;
+        uint deadlineTimestamp;
         GrantStatus status;
         bool isRegistered;
     }
     uint256 grantCounter;
     Grant[] grants;
     event NewGrant(uint256 id, address grantor, string name, uint256 amountAvailable);
-    event UpdateGrant(uint256 id, uint256 amountAvailable, GrantStatus status);
+    event UpdateGrant(uint256 id, GrantStatus status);
     
     struct GrantRequest {
         uint256 id;
         address payable project;
         uint256 grantId;
-        uint256 amountInUsd;
         RequestStatus status;
     }
     uint256 requestCounter;
     GrantRequest[] public requests;
-    event NewGrantRequest(uint256 id, address project, uint256 grantId, uint256 amountInUsd);
+    event NewGrantRequest(uint256 id, address project, uint256 grantId);
     event UpdateGrantRequest(uint256 id, RequestStatus status);
             
     
     enum RequestStatus {
         Created,
-        Approved,
-        Denied
+        Approved
     }
     
     enum GrantStatus {
@@ -132,8 +131,9 @@ contract GovTrack {
         emit NewProject(newProject.id, newProject.owner, newProject.name);
     }
 
-    function createGrant(string memory _name, string memory _description, uint256 _amountInUsd) public payable {
+    function createGrant(string memory _name, string memory _description, uint256 _amountInUsd, uint _deadlineTimestamp) public payable {
         require(addressToGrantor[msg.sender].isRegistered, "You have not registered as a grantor");
+        require(_deadlineTimestamp > block.timestamp, "Closing date must be in the future");
         require(msg.value >= usdToWei(_amountInUsd), "Value does not match");
         
         Grant memory newGrant = Grant({
@@ -141,17 +141,19 @@ contract GovTrack {
             grantor: msg.sender,
             name: _name,
             description: _description,
-            amountAvailable: msg.value,
+            amountInWei: msg.value,
+            deadlineTimestamp: _deadlineTimestamp,
             status: GrantStatus.Open,
             isRegistered: true
         });
         grantCounter+=1;
         grants.push(newGrant);
-        emit NewGrant(newGrant.id, newGrant.grantor, newGrant.name, newGrant.amountAvailable);
+        emit NewGrant(newGrant.id, newGrant.grantor, newGrant.name, newGrant.amountInWei);
     }
     
-    function requestGrant(address payable _project, uint256 _grantId, uint256 _amountInUsd) public {
+    function requestGrant(address payable _project, uint256 _grantId) public {
         require(grants[_grantId].isRegistered, "Grant does not exist");
+        require(block.timestamp < grants[_grantId].deadlineTimestamp, "Grant has expired");
         require(addressToApplicant[msg.sender].isRegistered, "You have not registered as an applicant");
         require(addressToProject[_project].owner == msg.sender, "You do not own this project");
         
@@ -159,42 +161,31 @@ contract GovTrack {
             id: requestCounter,
             project: _project,
             grantId: _grantId,
-            amountInUsd: _amountInUsd,
             status: RequestStatus.Created
         });
         requestCounter += 1;
         requests.push(newGrantRequest);
-        emit NewGrantRequest(newGrantRequest.id, newGrantRequest.project, newGrantRequest.grantId, newGrantRequest.amountInUsd);
+        emit NewGrantRequest(newGrantRequest.id, newGrantRequest.project, newGrantRequest.grantId);
     }
     
-    function resolveRequest(uint256 _requestId, bool isApproved) public {
+    function approveRequest(uint256 _requestId) public {
         GrantRequest storage request = requests[_requestId];
         Grant storage grant = grants[requests[_requestId].grantId];
 
         require(request.status == RequestStatus.Created, "You cannot resolve an already resolved request");
         require(addressToGrantor[msg.sender].isRegistered, "You have not registered as a grantor");
         require(grant.grantor == msg.sender, "You do not own this grant");
-       
-        if (isApproved) {
-            uint256 amountInWei = usdToWei(request.amountInUsd);
-             
-            request.project.transfer(amountInWei);
-            request.status = RequestStatus.Approved;
-            
-            grant.amountAvailable -= amountInWei;
-            
-            emit UpdateGrantRequest(request.id, request.status);
-            emit UpdateGrant(grant.id, grant.amountAvailable, grant.status);
-        }else {
-            request.status = RequestStatus.Denied;
-        }
-    }
-    
-    function closeGrant(uint256 _grantId) isGrantOwner(_grantId) public {
-        Grant storage grant = grants[_grantId];
+        
+        // Generally we don't approve a project when not everybody has applied
+        // Uncomment this rule when deploying to production
+        // require(grant.deadlineTimestamp < block.timestamp, "Grant has not reached deadline");
+         
+        request.project.transfer(grant.amountInWei);
+        request.status = RequestStatus.Approved;
         grant.status = GrantStatus.Closed;
         
-        emit UpdateGrant(grant.id, grant.amountAvailable, grant.status);
+        emit UpdateGrantRequest(request.id, request.status);
+        emit UpdateGrant(grant.id, grant.status);
     }
     
     function getUsdPerEth() private view returns (uint256) {
