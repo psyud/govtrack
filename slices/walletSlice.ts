@@ -1,12 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Role } from '../utils/enums';
+import IWalletState from '../states/IWalletState';
 
 export const slice = createSlice({
   name: 'wallet',
   initialState: {
     isMetaMaskInstalled: false,
     isWalletConnected: false,
-    isWalletConnecting: false,
     isLoggedIn: false,
     isLoggedInAs: null
   },
@@ -17,9 +17,6 @@ export const slice = createSlice({
     walletConnected: (state, action) => {
         state.isWalletConnected = action.payload as boolean;
     },
-    walletConnecting: (state, action) => {
-        state.isWalletConnecting = action.payload as boolean;
-    },
     loggedIn: (state, action) => {
         state.isLoggedIn = true;
         state.isLoggedInAs = action.payload as Role;
@@ -27,8 +24,8 @@ export const slice = createSlice({
   },
 });
 
-export const { metaMaskInstalled, walletConnected, walletConnecting, loggedIn } = slice.actions;
+export const { metaMaskInstalled, walletConnected, loggedIn } = slice.actions;
 
-export const selectWallet = state => state.wallet;
+export const selectWallet = state => state.wallet as IWalletState;
 
 export default slice.reducer;

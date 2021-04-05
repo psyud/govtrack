@@ -8,7 +8,9 @@ import 'semantic-ui-css/semantic.min.css'
 import {
     metaMaskInstalled,
     walletConnected,
+    loggedIn
 } from '../slices/walletSlice';
+import { isMetaMaskInstalled, isWalletConnected } from '../utils/clientUtils';
 
 
 interface IProps {
@@ -19,8 +21,10 @@ export default function Layout(props: IProps) {
     const dispatch = useDispatch();
     useEffect(() => {
         async function _() {
-            dispatch(metaMaskInstalled(true));
-            dispatch(walletConnected(true));
+            dispatch(metaMaskInstalled(await isMetaMaskInstalled()));
+            dispatch(walletConnected(await isWalletConnected()));
+
+            // TODO handle login check after wallet is connected
         }
         _()
     })

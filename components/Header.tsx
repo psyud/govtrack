@@ -8,7 +8,29 @@ import {
 
  function Header() {
     const wallet = useSelector(selectWallet);
-    console.log(wallet);
+
+    const renderButtons = () => {
+        const signInButton = <Link href='/signin'>
+            <Button primary>Sign In</Button>
+        </Link>;
+        const signUpButton = <Link href='/signup'>
+            <Button color='yellow' style={{ marginLeft: '0.3em' }}>Sign Up</Button>
+        </Link>;
+        const userButton = <Link href="/user" >
+            <Button style={{ marginLeft: '0.3em' }} primary icon='user'/>
+        </Link>;
+
+        if(!wallet.isWalletConnected){
+            return <>
+                {signInButton}
+                {signUpButton}
+            </>
+        }else if(!wallet.isLoggedIn){
+            return signUpButton;
+        }else{
+            return userButton;
+        }
+    }
   
     return (
         <Menu style={{ marginTop: '1em' }}>
@@ -21,15 +43,9 @@ import {
             <Input icon='search' placeholder='Search...' />
             </Menu.Item>
             <Menu.Item>
-                <Link href='/signin'>
-                <Button primary>Sign In</Button>
-                </Link>
-                <Link href='/signup'>
-                <Button color='yellow' style={{ marginLeft: '0.3em' }}>Sign Up</Button>
-                </Link>
-                <Link href="/user" >
-                    <Button style={{ marginLeft: '0.3em' }} primary icon='user'/>
-                </Link>
+                {
+                    renderButtons()
+                }
             </Menu.Item>
         </Menu.Menu>
         </Menu>

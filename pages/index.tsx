@@ -4,17 +4,9 @@ import React, { Component } from 'react';
 import { Button, Container, Header, Rating, Table } from 'semantic-ui-react';
 import Grants from '../components/Grants';
 import Layout from '../components/Layout';
-import { isMetaMaskInstalled } from '../utils/clientUtils';
 
-interface IProps {
-
-}
-
-export default class Index extends Component<IProps> {
-
-  render() {
-      return <Layout>
-        <Grants data={[]}/>
-      </Layout>
-  }
+export default function Index () {
+  return <Layout>
+    <Grants data={[]}/>
+  </Layout>
 }

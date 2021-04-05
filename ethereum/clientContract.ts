@@ -5,14 +5,23 @@
  */
 
 import { ethers } from "ethers";
-import compilation from '../build/contracts/Migrations.json';
-import { isMetaMaskInstalled } from "../utils/clientUtils";
+import compilation from '../build/contracts/GovTrack.json';
+import { getWeb3Provider, isMetaMaskInstalled } from "../utils/clientUtils";
+import contractAddress from '../contract';
 
 if(!isMetaMaskInstalled()){
     throw new Error('Metamask not found');
 }
 
-let provider = new ethers.providers.Web3Provider(window.ethereum);
-let signer = provider.getSigner();
+export async function getRwContract(){
+    let provider = new ethers.providers.Web3Provider(await getWeb3Provider());
+    let signer = provider.getSigner();
 
-export default (new ethers.Contract(process.env.CONTRACT_ADDRESS, compilation.abi as any, provider)).connect(signer);
+    return (new ethers.Contract(contractAddress, compilation.abi as any, provider)).connect(signer);
+}
+
+export async function getReadOnlyContract(){
+    let provider = new ethers.providers.Web3Provider(await getWeb3Provider());
+
+    return new ethers.Contract(contractAddress, compilation.abi as any, provider);
+}

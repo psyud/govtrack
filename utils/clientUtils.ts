@@ -13,7 +13,7 @@ export async function isWalletConnected() {
     return provider.selectedAddress !== null;
 }
 
-export async function getWeb3Provider() {
+export async function getWeb3Provider(): Promise<any> {
     let provider = await getWeb3ProviderOrNull();
     if(!provider){
         throw new Error('No provider');
