@@ -1,26 +1,11 @@
 import Link from "next/link";
 import React from "react"
 import { Table } from "semantic-ui-react"
-import GrantOpportunity from "../models/GrantOppurtunities";
+import GrantOpportunity from "../models/GrantOppurtunity";
 
 interface IProps {
     data: any
 }
-
-const data: GrantOpportunity[] = [
-    new GrantOpportunity('DHS-21-DAD-024-00-04', 'Emergency Food and Shelter National Board Program (EFSP), pursuant to the American Rescue Plan Act of 2021, Section 4007', 'DHS-DHS', 'Posted', new Date('04/02/2021')),
-    new GrantOpportunity('21JD01', 'Strategic Inmate Management Initiative', 'USDOJ-BOP-NIC', 'Posted', new Date('04/02/2021'), new Date('01/02/2021')),
-    new GrantOpportunity('DHS-21-DAD-024-00-04', 'Emergency Food and Shelter National Board Program (EFSP), pursuant to the American Rescue Plan Act of 2021, Section 4007', 'DHS-DHS', 'Posted', new Date('04/02/2021')),
-    new GrantOpportunity('21JD01', 'Strategic Inmate Management Initiative', 'USDOJ-BOP-NIC', 'Posted', new Date('04/02/2021'), new Date('01/02/2021')),
-    new GrantOpportunity('DHS-21-DAD-024-00-04', 'Emergency Food and Shelter National Board Program (EFSP), pursuant to the American Rescue Plan Act of 2021, Section 4007', 'DHS-DHS', 'Posted', new Date('04/02/2021')),
-    new GrantOpportunity('21JD01', 'Strategic Inmate Management Initiative', 'USDOJ-BOP-NIC', 'Posted', new Date('04/02/2021'), new Date('01/02/2021')),
-    new GrantOpportunity('DHS-21-DAD-024-00-04', 'Emergency Food and Shelter National Board Program (EFSP), pursuant to the American Rescue Plan Act of 2021, Section 4007', 'DHS-DHS', 'Posted', new Date('04/02/2021')),
-    new GrantOpportunity('21JD01', 'Strategic Inmate Management Initiative', 'USDOJ-BOP-NIC', 'Posted', new Date('04/02/2021'), new Date('01/02/2021')),
-    new GrantOpportunity('DHS-21-DAD-024-00-04', 'Emergency Food and Shelter National Board Program (EFSP), pursuant to the American Rescue Plan Act of 2021, Section 4007', 'DHS-DHS', 'Posted', new Date('04/02/2021')),
-    new GrantOpportunity('21JD01', 'Strategic Inmate Management Initiative', 'USDOJ-BOP-NIC', 'Posted', new Date('04/02/2021'), new Date('01/02/2021')),
-    new GrantOpportunity('DHS-21-DAD-024-00-04', 'Emergency Food and Shelter National Board Program (EFSP), pursuant to the American Rescue Plan Act of 2021, Section 4007', 'DHS-DHS', 'Posted', new Date('04/02/2021')),
-    new GrantOpportunity('21JD01', 'Strategic Inmate Management Initiative', 'USDOJ-BOP-NIC', 'Posted', new Date('04/02/2021'), new Date('01/02/2021')),
-]
 
 export default (props: IProps) => {
     return <Table size='small'>
@@ -36,7 +21,9 @@ export default (props: IProps) => {
     </Table.Header>
 
     <Table.Body>
-        {data.map((item: GrantOpportunity) => {
+        {props.data.map((item: any) => {
+            return new GrantOpportunity('DHS-21-DAD-024-00-04', 'Emergency Food and Shelter National Board Program (EFSP), pursuant to the American Rescue Plan Act of 2021, Section 4007', 'DHS-DHS', 'Posted', new Date('04/02/2021'), new Date('06/02/2021'))
+        }).map((item: GrantOpportunity) => {
             return <Table.Row>
                 <Table.Cell>
                     <Link href="/grants/[id]" as={`/grants/${item.id}`}>

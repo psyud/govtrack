@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { Grid, Table } from "semantic-ui-react";
-import GrantOpportunity from "../models/GrantOppurtunities";
+import GrantOpportunity from "../models/GrantOppurtunity";
 
 interface IProps {
 
 }
 
-const data = new GrantOpportunity('DHS-21-DAD-024-00-04', 'Emergency Food and Shelter National Board Program (EFSP), pursuant to the American Rescue Plan Act of 2021, Section 4007', 'DHS-DHS', 'Posted', new Date('04/02/2021'));
+const data = new GrantOpportunity('DHS-21-DAD-024-00-04', 'Emergency Food and Shelter National Board Program (EFSP), pursuant to the American Rescue Plan Act of 2021, Section 4007', 'DHS-DHS', 'Posted', new Date('04/02/2021'), new Date('06/02/2021'));
 
 export default class GrantInfo extends Component<IProps> {
     render() {

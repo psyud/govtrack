@@ -39,7 +39,6 @@ export default function SignUp() {
         if(selectedRole === null){
             return;
         }
-        const provider = await getWeb3Provider();
         const contract = await getRwContract();
         try {
             setSigningUp(true);

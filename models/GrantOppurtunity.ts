@@ -4,12 +4,12 @@ export default class GrantOpportunity {
     agency: string;
     status: string;
     createdAt: Date;
-    closedAt?: Date;
+    closedAt: Date;
     amount: number
 
-    constructor(id: string, title: string, agency: string, status: string, createdAt: Date, closedAt: Date = null) {
+    constructor(id: string, title: string, agency: string, status: string, createdAt: Date, closedAt) {
         this.id = id;
-        this.title = title,
+        this.title = title;
         this.agency = agency;
         this.status = status;
         this.createdAt = createdAt;

@@ -2,14 +2,14 @@
  * Readonly
  * Used server side to fetch information before rendering pages
  */
-
+import getConfig from 'next/config';
 import { ethers } from 'ethers';
 import compilation from '../build/contracts/GovTrack.json';
-import contractAddress from '../contract';
 
-import dotenv from 'dotenv';
-dotenv.config();
+const { serverRuntimeConfig, publicRuntimeConfig } = getConfig()
 
-let provider = new ethers.providers.InfuraProvider('kovan', process.env.INFURA_KEY);
+export function getReadonlyContract() {
+    let provider = new ethers.providers.InfuraProvider('rinkeby', serverRuntimeConfig.INFURA_KEY);
 
-export default new ethers.Contract(contractAddress, compilation.abi as any, provider);
+    return new ethers.Contract(publicRuntimeConfig.CONTRACT_ADDRESS, compilation.abi as any, provider);
+}
