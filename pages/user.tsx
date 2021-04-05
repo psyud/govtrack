@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React, { Component } from "react";
 import { Button, Icon, Table } from "semantic-ui-react";
 import Layout from "../components/Layout";
@@ -15,6 +16,9 @@ export default class User extends Component<IEmptyProps, IWalletState>{
 
     render () {
         return <Layout>
+            <Link href="/projects/new">
+                <Button primary>New Project</Button>
+            </Link>
             <Table>
                 <Table.Header>
                     <Table.Row>
@@ -53,6 +57,10 @@ export default class User extends Component<IEmptyProps, IWalletState>{
                 </Table.Body>
             </Table>
         
+
+            <Link href="/grants/new">
+                <Button primary>New Funding Oppurtunity</Button>
+            </Link>
             <Table>
                 <Table.Header>
                     <Table.Row>
