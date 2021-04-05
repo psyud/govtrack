@@ -10,12 +10,7 @@ interface IProps {
 
 }
 
-interface IState {
-  hasMetaMask: boolean,
-  isConnectedToMetaMask: boolean
-}
-
-export default class Index extends Component<IProps, IState> {
+export default class Index extends Component<IProps> {
 
   render() {
       return <Layout>

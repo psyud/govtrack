@@ -3,12 +3,18 @@ import React, { Component } from "react";
 import { Button, Grid, Menu } from "semantic-ui-react";
 import GrantInfo from "../../../components/GrantInfo";
 import Layout from "../../../components/Layout"
+import IWalletState from '../../../states/IWalletState';
+import { isWalletConnected } from "../../../utils/clientUtils";
 
 export interface IProps {
     id: any
 }
 
-export default class GrantDetail extends Component<IProps>{
+export default class GrantDetail extends Component<IProps, IWalletState>{
+    state = {
+        isWalletConnected: false
+    }
+
     static async getInitialProps(props: any) {
         const { id } = props.query;
         if(typeof id === 'undefined'){
@@ -20,17 +26,32 @@ export default class GrantDetail extends Component<IProps>{
         }
     }
 
+    async componentDidMount() {
+        this.setState({
+            isWalletConnected: await isWalletConnected()
+        })
+    }
+
     render() {
         return <Layout>
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Link href="/grants/[id]/applicants" as={`/grants/${this.props.id}/applicants`}>
-                    <Button primary>View Applicants</Button>
-                </Link>
-                <Link href="/grants/[id]/apply" as={`/grants/${this.props.id}/apply`}>
-                    <Button color='red'>Apply</Button>
-                </Link>
+            
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div>
+                    <Button color='green' icon='checkmark'/>
+                    <Button color='red' icon='close'/>
+                </div>
+                <div>
+                    <Link href="/grants/[id]/applicants" as={`/grants/${this.props.id}/applicants`}>
+                        <Button primary>View Applicants</Button>
+                    </Link>
+                    <Link href="/grants/[id]/apply" as={`/grants/${this.props.id}/apply`}>
+                        <Button disabled={!this.state.isWalletConnected} color='red'>Apply</Button>
+                    </Link>
+                </div>
+                
             </div>
             <GrantInfo/>
+            
         </Layout>
     }
 }

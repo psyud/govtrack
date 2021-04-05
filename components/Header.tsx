@@ -4,7 +4,6 @@ import { Button, Input, Menu } from 'semantic-ui-react';
 import { isMetaMaskInstalled, isWalletConnected } from '../utils/clientUtils';
 
 interface IProps {
-
 }
 
 interface IState {
@@ -72,16 +71,19 @@ export default class Header extends Component<IProps, IState>{
                 <Input icon='search' placeholder='Search...' />
               </Menu.Item>
               <Menu.Item>
-                <Button 
-                    disabled={this.state.isWalletConnecting || this.state.isWalletConnected || !this.state.isMetaMaskInstalled} 
-                    onClick={this.connectWallet} 
-                    color={this.getWalletButtonColor()}
-                >
-                    {this.getWalletButtonText()}
-                </Button>
+                  <Link href='/signin'>
+                    <Button primary>Sign In</Button>
+                  </Link>
+                  <Link href='/signup'>
+                    <Button color='yellow' style={{ marginLeft: '0.3em' }}>Sign Up</Button>
+                  </Link>
+                  <Link href="/user" >
+                        <Button style={{ marginLeft: '0.3em' }} primary icon='user'/>
+                    </Link>
               </Menu.Item>
             </Menu.Menu>
           </Menu>
-        );
+        ); 
     }
+
 } 
