@@ -51,8 +51,6 @@ export default function SignIn() {
             const provider = await getWeb3Provider();
             await provider.enable();
             dispatch(walletConnected(true));
-
-            
         }finally{
             setIsConnecting(false);
         }
@@ -71,10 +69,9 @@ export default function SignIn() {
                 <Grid.Row>
                     {
                         !wallet.isMetaMaskInstalled && <Message warning>Please install MetaMask</Message> 
-                        
                     }
                     {
-                        !wallet.isWalletConnected &&  <Button 
+                        wallet.isMetaMaskInstalled && !wallet.isWalletConnected &&  <Button 
                             loading={isConnecting}
                             disabled={isConnecting}
                             onClick={()=>connectWallet()} 
