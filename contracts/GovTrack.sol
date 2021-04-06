@@ -13,8 +13,8 @@ contract GovTrack {
      * Aggregator: ETH/USD
      * Address: 0x8A753747A1Fa494EC906cE90E9f37563A8AF630e
      */
-    constructor() {
-        priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
+    constructor(address oracleAddress) {
+        priceFeed = AggregatorV3Interface(oracleAddress);
     }
     
     struct Applicant {
@@ -188,12 +188,12 @@ contract GovTrack {
         emit UpdateGrant(grant.id, grant.status);
     }
     
-    function getUsdPerEth() private view returns (uint256) {
+    function getUsdPerEth() public view returns (uint256) {
         (, int price, , , ) = priceFeed.latestRoundData();
         return uint256(price);
     }
 
-    function usdToWei(uint256 _amountInUsd) private view returns(uint256) {
+    function usdToWei(uint256 _amountInUsd) public view returns(uint256) {
         uint256 usdPerEth = getUsdPerEth();
         
         return _amountInUsd * priceFeedPrecision * weiPrecision / usdPerEth;
