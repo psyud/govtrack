@@ -38,6 +38,7 @@ export default function NewGrant() {
             const contract = await getRwContract();
             setErrorMessage('');
             setSubmitting(true);
+            
             const amountOfWeiToSend: BigNumber = await contract.usdToWei(amount);
             await contract.createGrant(title, description, amount, Math.round(deadline.valueOf() / 1000), {
                 value: amountOfWeiToSend

@@ -118,10 +118,7 @@ export default function User() {
 //                         <Table.Cell>65464521</Table.Cell>
 //                         <Table.Cell>
 //                             <Button color='green' icon='checkmark'/>
-//                             <Button color='red' icon='close'/>
-//                         </Table.Cell>
-//                     </Table.Row>
-//                 </Table.Body>
+//                       7545e.Body>
 //             </Table>
 //         </Layout>
 //     }
