@@ -13,7 +13,7 @@ contract MockOracle is AggregatorV3Interface {
         mockDecimals = 0;
         mockDescription = "Two plus two is what?";
         mockVersion = 0;
-        mockAnswer = 2000;
+        mockAnswer = 2000 * 100000000;
     }
     
     function decimals() override external view returns (uint8){
