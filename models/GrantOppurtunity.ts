@@ -1,5 +1,5 @@
 export default class GrantOpportunity {
-    id: string;
+    id: number;
     title: string;
     agency: string;
     status: string;
@@ -7,7 +7,7 @@ export default class GrantOpportunity {
     closedAt: Date;
     amount: number
 
-    constructor(id: string, title: string, agency: string, status: string, createdAt: Date, closedAt) {
+    constructor(id: number, title: string, agency: string, status: string, createdAt: Date, closedAt) {
         this.id = id;
         this.title = title;
         this.agency = agency;
