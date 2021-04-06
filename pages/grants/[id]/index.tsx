@@ -3,32 +3,37 @@ import React, { Component } from "react";
 import { Button, Grid, Menu } from "semantic-ui-react";
 import GrantInfo from "../../../components/GrantInfo";
 import Layout from "../../../components/Layout"
-import IWalletState from '../../../states/IWalletState';
-import { isWalletConnected } from "../../../utils/clientUtils";
+import { getReadonlyContract } from "../../../ethereum/serverContract";
+import GrantOpportunity from "../../../models/GrantOppurtunity";
+
+import {
+    selectWallet
+} from '../../../slices/walletSlice';
+import { useSelector } from "react-redux";
+import { Role } from "../../../utils/enums";
 
 export interface IProps {
-    id: any
+    id: any,
+    grant: GrantOpportunity
 }
 
-function GrantDetail(props: IProps, state: IWalletState) {
+function GrantDetail(props: IProps) {
+    const { isLoggedInAs, isLoggedIn } = useSelector(selectWallet);
     return <Layout>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <div>
-                    <Button color='green' icon='checkmark'/>
-                    <Button color='red' icon='close'/>
-                </div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <div>
                     <Link href="/grants/[id]/applicants" as={`/grants/${props.id}/applicants`}>
                         <Button primary>View Applicants</Button>
                     </Link>
-                    <Link href="/grants/[id]/apply" as={`/grants/${props.id}/apply`}>
-                        <Button disabled={!state.isWalletConnected} color='red'>Apply</Button>
-                    </Link>
+                    {
+                        isLoggedInAs !== Role.Grantor && <Link href="/grants/[id]/apply" as={`/grants/${props.id}/apply`}>
+                            <Button disabled={!isLoggedIn} color='red'>Apply</Button>
+                        </Link>
+                    }
                 </div>
                 
             </div>
-            <GrantInfo/>
-            
+            <GrantInfo grant={props.grant}/>
         </Layout>
 }
 
@@ -38,55 +43,12 @@ GrantDetail.getInitialProps = async (props) => {
         return {};
     }
 
+    const contract = getReadonlyContract();
+    const grant = GrantOpportunity.parse(await contract.grants(id));
     return {
-        id
+        id,
+        grant
     }
 }
 
 export default GrantDetail;
-
-// export default class GrantDetail extends Component<IProps, IWalletState>{
-//     state = {
-//         isWalletConnected: false
-//     }
-
-//     static async getInitialProps(props: any) {
-//         const { id } = props.query;
-//         if(typeof id === 'undefined'){
-//             return {};
-//         }
-
-//         return {
-//             id
-//         }
-//     }
-
-//     async componentDidMount() {
-//         this.setState({
-//             isWalletConnected: await isWalletConnected()
-//         })
-//     }
-
-//     render() {
-//         return <Layout>
-            
-//             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-//                 <div>
-//                     <Button color='green' icon='checkmark'/>
-//                     <Button color='red' icon='close'/>
-//                 </div>
-//                 <div>
-//                     <Link href="/grants/[id]/applicants" as={`/grants/${this.props.id}/applicants`}>
-//                         <Button primary>View Applicants</Button>
-//                     </Link>
-//                     <Link href="/grants/[id]/apply" as={`/grants/${this.props.id}/apply`}>
-//                         <Button disabled={!this.state.isWalletConnected} color='red'>Apply</Button>
-//                     </Link>
-//                 </div>
-                
-//             </div>
-//             <GrantInfo/>
-            
-//         </Layout>
-//     }
-// }

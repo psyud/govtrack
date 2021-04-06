@@ -23,15 +23,7 @@ export default (props: IProps) => {
 
     <Table.Body>
         {props.data.map((item: any) => {
-            console.log(item);
-            return new GrantOpportunity(
-                Number.parseInt(item[0]._hex), 
-                item[2], 
-                item[1].substring(0, 10) + '...', 
-                toGrantStatusString(item[6]), 
-                new Date(0), 
-                new Date(Number.parseInt(item[5]._hex) * 1000)
-            )
+            return GrantOpportunity.parse(item);
         }).map((item: GrantOpportunity) => {
             return <Table.Row>
                 <Table.Cell>

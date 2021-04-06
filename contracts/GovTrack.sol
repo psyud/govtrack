@@ -58,7 +58,7 @@ contract GovTrack {
         bool isRegistered;
     }
     uint256 grantCounter;
-    Grant[] grants;
+    Grant[] public grants;
     event NewGrant(uint256 id, address grantor, string name, uint256 amountAvailable);
     event UpdateGrant(uint256 id, GrantStatus status);
     
