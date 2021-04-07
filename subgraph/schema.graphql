@@ -10,7 +10,7 @@ type Applicant @entity {
 
 type Project @entity {
   id: ID!
-  ownerId: ID!
+  ownerId: Bytes!
   name: String!
   description: String!
 
@@ -28,13 +28,13 @@ type Grantor @entity {
 
 type Grant @entity {
   id: ID!
-  grantorId: ID!
+  grantorId: Bytes!
   name: String!
   description: String!
   amountInWei: BigInt!
   createdAt: BigInt!
   deadlineTimestamp: BigInt!
-  status: GrantStatus!
+  status: Int!
 
   grantor: Grantor!
   grantRequests: [GrantRequest!] @derivedFrom(field: "grant")
@@ -42,24 +42,13 @@ type Grant @entity {
 
 type GrantRequest @entity {
   id: ID!
-  amountInUsd: BigInt!
-  status: RequestStatus!
+  projectId: Bytes!
+  grantId: BigInt!
+  status: Int!
 
   project: Project!
   grant: Grant!
 }
-
-enum RequestStatus {
-  Created,
-  Approved,
-  Denied
-}
-
-enum GrantStatus {
-  Open,
-  Closed
-}
-
 
 type _Schema_ 
   @fulltext (
