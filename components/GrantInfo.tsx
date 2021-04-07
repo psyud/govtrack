@@ -1,6 +1,8 @@
+import moment from "moment";
 import React, { Component, useEffect } from "react";
 import { Grid, Table } from "semantic-ui-react";
 import GrantOpportunity from "../models/GrantOppurtunity";
+import { DATE_FORMAT } from "../utils/constants";
 
 interface IProps {
     grant: GrantOpportunity
@@ -31,11 +33,11 @@ export default function GrantInfo(props: IProps) {
                         </Table.Row>
                         <Table.Row>
                             <Table.Cell textAlign='right'><b>Posted Date</b></Table.Cell>
-                            <Table.Cell>{grant.createdAt.toString()}</Table.Cell>
+                            <Table.Cell>{moment(grant.createdAt).format(DATE_FORMAT)}</Table.Cell>
                         </Table.Row>
                         <Table.Row>
                             <Table.Cell textAlign='right'><b>Closing Date for Applications</b></Table.Cell>
-                            <Table.Cell>{grant.closedAt.toString()}</Table.Cell>
+                            <Table.Cell>{moment(grant.closedAt).format(DATE_FORMAT)}</Table.Cell>
                         </Table.Row>
                         <Table.Row>
                             <Table.Cell textAlign='right'><b>Estimated Total Program Funding</b></Table.Cell>
@@ -75,7 +77,7 @@ export default function GrantInfo(props: IProps) {
                     <Table.Body>
                         <Table.Row>
                             <Table.Cell textAlign='right'><b>Agency Name</b></Table.Cell>
-                            <Table.Cell>{grant.agency}</Table.Cell>
+                            <Table.Cell>{grant.agencyName}</Table.Cell>
                         </Table.Row>
                         <Table.Row>
                             <Table.Cell textAlign='right'><b>Description</b></Table.Cell>

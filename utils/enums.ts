@@ -15,6 +15,6 @@ export function toGrantStatusString(status: GrantStatus){
         case GrantStatus.Closed:
             return 'Closed';
         default:
-            throw new Error('Unknown role');
+            throw new Error('Unknown status');
     }
 }

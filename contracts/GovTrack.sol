@@ -53,6 +53,7 @@ contract GovTrack {
         string name;
         string description;
         uint256 amountInWei;
+        uint createdAt;
         uint deadlineTimestamp;
         GrantStatus status;
         bool isRegistered;
@@ -142,6 +143,7 @@ contract GovTrack {
             name: _name,
             description: _description,
             amountInWei: msg.value,
+            createdAt: block.timestamp,
             deadlineTimestamp: _deadlineTimestamp,
             status: GrantStatus.Open,
             isRegistered: true

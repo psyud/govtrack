@@ -22,9 +22,13 @@ export async function getWeb3Provider(): Promise<any> {
 }
 
 async function getWeb3ProviderOrNull() {
-    let provider = await detectProvider();
-    if(!provider){
+    try{
+        let provider = await detectProvider();
+        if(!provider){
+            return null;
+        }
+        return provider;
+    }catch(err){
         return null;
     }
-    return provider;
 }

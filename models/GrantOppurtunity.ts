@@ -1,35 +1,39 @@
 import { toGrantStatusString } from "../utils/enums";
+import moment from 'moment';
+import GovTrack from "./contracts/GovTrack";
+import { DATE_FORMAT } from '../utils/constants'; 
 
 export default class GrantOpportunity {
     id: number;
     title: string;
     description: string;
-    agency: string;
+    agencyAddress: string;
+    agencyName: string;
     status: string;
     createdAt: Date;
     closedAt: Date;
     amount: number
 
-    constructor(id: number, title: string, description: string, agency: string, status: string, createdAt: Date, closedAt) {
+    constructor(id: number, title: string, description: string, agency: string, status: string, createdAt: Date, closedAt: Date) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.agency = agency;
+        this.agencyAddress = agency;
         this.status = status;
         this.createdAt = createdAt;
         this.closedAt = closedAt;
         this.amount = 100000;
     }
 
-    static parse(item:any) {
+    static parse(item: GovTrack) {
         return new GrantOpportunity(
-            Number.parseInt(item[0]._hex), 
-            item[2], 
-            item[3],
-            item[1], 
-            toGrantStatusString(item[6]), 
-            new Date(0), 
-            new Date(Number.parseInt(item[5]._hex) * 1000)
+            Number.parseInt(item.id.toString()), 
+            item.name, 
+            item.description,
+            item.grantor, 
+            toGrantStatusString(item.status), 
+            new Date(Number.parseInt(item.createdAt.toString()) * 1000), 
+            new Date(Number.parseInt(item.deadlineTimestamp.toString()) * 1000)
         )
     }
 }

@@ -1,14 +1,15 @@
+import moment from "moment";
 import Link from "next/link";
 import React from "react"
 import { Table } from "semantic-ui-react"
 import GrantOpportunity from "../models/GrantOppurtunity";
-import { toGrantStatusString } from "../utils/enums";
+import { DATE_FORMAT } from "../utils/constants";
 
 interface IProps {
-    data: any
+    data: GrantOpportunity[]
 }
 
-export default (props: IProps) => {
+export default function (props: IProps) {
     return <Table size='small'>
     <Table.Header>
       <Table.Row>
@@ -22,10 +23,8 @@ export default (props: IProps) => {
     </Table.Header>
 
     <Table.Body>
-        {props.data.map((item: any) => {
-            return GrantOpportunity.parse(item);
-        }).map((item: GrantOpportunity) => {
-            return <Table.Row>
+        {props.data.map((item: GrantOpportunity) => {
+            return <Table.Row key={item.id}>
                 <Table.Cell>
                         {item.id}
                 </Table.Cell>
@@ -34,10 +33,10 @@ export default (props: IProps) => {
                         {item.title}
                     </Link>
                 </Table.Cell>
-                <Table.Cell>{item.agency}</Table.Cell>
+                <Table.Cell>{item.agencyName}</Table.Cell>
                 <Table.Cell>{item.status}</Table.Cell>
-                <Table.Cell>{item.createdAt.toDateString()}</Table.Cell>
-                <Table.Cell>{item.closedAt.toDateString()}</Table.Cell>
+                <Table.Cell>{moment(item.createdAt).format(DATE_FORMAT)}</Table.Cell>
+                <Table.Cell>{moment(item.closedAt).format(DATE_FORMAT)}</Table.Cell>
             </Table.Row>
         })}
     </Table.Body>
