@@ -1,5 +1,6 @@
 import { BigNumber } from "@ethersproject/bignumber";
+const MAGIC_NUMBER = '100000000000000000000000000';
 
 export function weiToUsd(amountInWei: BigNumber, usdPerEth: BigNumber){
-    return amountInWei.div(BigNumber.from('1000000000000000000')).mul(usdPerEth.div(1e8)).toNumber()
+    return amountInWei.mul(usdPerEth).div(BigNumber.from(MAGIC_NUMBER)).toNumber();
 }

@@ -1,6 +1,6 @@
 import Link from "next/link";
-import React, { Component } from "react";
-import { Button, Grid, Menu } from "semantic-ui-react";
+import React from "react";
+import { Button } from "semantic-ui-react";
 import GrantInfo from "../../../components/GrantInfo";
 import Layout from "../../../components/Layout"
 import { getReadonlyContract } from "../../../ethereum/serverContract";
@@ -12,9 +12,8 @@ import {
 import { useSelector } from "react-redux";
 import { Role } from "../../../utils/enums";
 import { BigNumber } from "@ethersproject/bignumber";
-import { weiToUsd as weiToUsd } from "../../../utils/numbers";
 import { GetServerSideProps } from "next";
-import { GET_GRANTS, GET_GRANT_BY_ID } from "../../../graphql/queries";
+import { GET_GRANT_BY_ID } from "../../../graphql/queries";
 import client from "../../../graphql/client";
 
 export interface IProps {
