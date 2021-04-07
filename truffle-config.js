@@ -75,8 +75,16 @@ module.exports = {
     // }
     kovan: {
       provider: () => new HDWalletProvider(mnemonic, `https://kovan.infura.io/v3/${infuraKey}`),
-      network_id: 42,       // Kovan's id
+      network_id: 42,    
+      skipDryRun: true,  
+      timeoutBlocks: 1000
     },
+    rinkeby: {
+      provider: () => new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/v3/${infuraKey}`),
+      network_id: 4,
+      skipDryRun: true, 
+      timeoutBlocks: 1000   
+    }
   },
 
   // Set default mocha options here, use special reporters etc.

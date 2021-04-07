@@ -4,10 +4,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Contract
-    network: kovan
+    network: rinkeby
     source:
-      address: "0x79A3F9f71f0171B6c85ab576028f8383d86Dcc90"
+      address: "0xd1b1E4D24D14BBb107a70253706e9515D483FAf3"
       abi: Contract
+      startBlock: 8369871
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -22,17 +23,17 @@ dataSources:
         - name: Contract
           file: ./abis/Contract.json
       eventHandlers:
-        - event: NewApplicant(address,string)
+        - event: NewApplicant(address,string,string,string,string)
           handler: handleNewApplicant
-        - event: NewGrantor(address,string)
+        - event: NewGrantor(address,string,string)
           handler: handleNewGrantor
-        - event: NewProject(address,address,string)
+        - event: NewProject(address,address,string,string)
           handler: handleNewProject
-        - event: NewGrant(uint256,address,string,uint256)
+        - event: NewGrant(uint256,address,string,string,uint256,uint256,uint256,uint8)
           handler: handleNewGrant
-        - event: UpdateGrant(uint256,uint256,uint8)
+        - event: UpdateGrant(uint256,uint8)
           handler: handleUpdateGrant
-        - event: NewGrantRequest(uint256,address,uint256,uint256)
+        - event: NewGrantRequest(uint256,address,uint256)
           handler: handleNewGrantRequest
         - event: UpdateGrantRequest(uint256,uint8)
           handler: handleUpdateGrantRequeset

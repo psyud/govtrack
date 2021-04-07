@@ -8,11 +8,6 @@ contract GovTrack {
     uint256 priceFeedPrecision = 100000000; // 1e8
     uint256 weiPrecision = 1000000000000000000; // 1e18
     
-    /**
-     * Network: Rinkeby
-     * Aggregator: ETH/USD
-     * Address: 0x8A753747A1Fa494EC906cE90E9f37563A8AF630e
-     */
     constructor(address oracleAddress) {
         priceFeed = AggregatorV3Interface(oracleAddress);
     }
@@ -27,7 +22,7 @@ contract GovTrack {
     }
     mapping(address => Applicant) public addressToApplicant;
     mapping(address => Project[]) public applicantToProjects;
-    event NewApplicant(address id, string name);
+    event NewApplicant(address id, string name, string phoneNumber, string emailAddress, string physicalAddress);
     
     struct Project {
         address id;
@@ -37,7 +32,7 @@ contract GovTrack {
         bool isRegistered;
     }
     mapping(address => Project) public addressToProject;
-    event NewProject(address id, address owner, string name);
+    event NewProject(address id, address owner, string name, string description);
     
     struct Grantor {
         address id;
@@ -47,7 +42,7 @@ contract GovTrack {
     }
     mapping(address => Grantor) public addressToGrantor;
     mapping(address => Grant[]) public grantorToGrants;
-    event NewGrantor(address id, string name);
+    event NewGrantor(address id, string agencyName, string agencyCode);
     
     struct Grant {
         uint256 id;
@@ -62,7 +57,7 @@ contract GovTrack {
     }
     uint256 grantCounter;
     Grant[] public grants;
-    event NewGrant(uint256 id, address grantor, string name, uint256 amountAvailable);
+    event NewGrant(uint256 id, address grantor, string name, string description, uint256 amountInWei, uint createdAt, uint deadlineTimeStamp, GrantStatus grantStatus);
     event UpdateGrant(uint256 id, GrantStatus status);
     
     struct GrantRequest {
@@ -113,7 +108,12 @@ contract GovTrack {
             isRegistered: true
         });
         addressToApplicant[newApplicant.id] = newApplicant;
-        emit NewApplicant(newApplicant.id, newApplicant.name);
+        emit NewApplicant(
+            newApplicant.id, 
+            newApplicant.name, 
+            newApplicant.phoneNumber,
+            newApplicant.emailAddress,
+            newApplicant.physicalAddress);
     }
     
     function registerAsGrantor(string memory _agencyName, string memory _agencyCode) public {
@@ -126,7 +126,7 @@ contract GovTrack {
             isRegistered: true
         });
         addressToGrantor[newGrantor.id] = newGrantor;
-        emit NewGrantor(newGrantor.id, newGrantor.agencyName);
+        emit NewGrantor(newGrantor.id, newGrantor.agencyName, newGrantor.agencyCode);
     }
 
     function createProject(address payable _project, string memory _name, string memory _description) public {
@@ -142,7 +142,7 @@ contract GovTrack {
         });
         addressToProject[_project] = newProject;
         applicantToProjects[newProject.owner].push(newProject);
-        emit NewProject(newProject.id, newProject.owner, newProject.name);
+        emit NewProject(newProject.id, newProject.owner, newProject.name, newProject.description);
     }
 
     function createGrant(string memory _name, string memory _description, uint256 _amountInUsd, uint _deadlineTimestamp) public payable {
@@ -164,7 +164,15 @@ contract GovTrack {
         grantCounter+=1;
         grants.push(newGrant);
         grantorToGrants[newGrant.grantor].push(newGrant);
-        emit NewGrant(newGrant.id, newGrant.grantor, newGrant.name, newGrant.amountInWei);
+        emit NewGrant(
+            newGrant.id, 
+            newGrant.grantor, 
+            newGrant.name, 
+            newGrant.description,
+            newGrant.amountInWei,
+            newGrant.createdAt,
+            newGrant.deadlineTimestamp,
+            newGrant.status);
     }
     
     function requestGrant(address payable _project, uint256 _grantId) public {

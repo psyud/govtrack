@@ -1,6 +1,12 @@
 [
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "oracleAddress",
+        "type": "address"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
@@ -17,6 +23,24 @@
         "indexed": false,
         "internalType": "string",
         "name": "name",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "phoneNumber",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "emailAddress",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "physicalAddress",
         "type": "string"
       }
     ],
@@ -46,9 +70,33 @@
       },
       {
         "indexed": false,
+        "internalType": "string",
+        "name": "description",
+        "type": "string"
+      },
+      {
+        "indexed": false,
         "internalType": "uint256",
-        "name": "amountAvailable",
+        "name": "amountInWei",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "createdAt",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "deadlineTimeStamp",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum GovTrack.GrantStatus",
+        "name": "grantStatus",
+        "type": "uint8"
       }
     ],
     "name": "NewGrant",
@@ -74,12 +122,6 @@
         "internalType": "uint256",
         "name": "grantId",
         "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amountInUsd",
-        "type": "uint256"
       }
     ],
     "name": "NewGrantRequest",
@@ -97,7 +139,13 @@
       {
         "indexed": false,
         "internalType": "string",
-        "name": "name",
+        "name": "agencyName",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "agencyCode",
         "type": "string"
       }
     ],
@@ -124,6 +172,12 @@
         "internalType": "string",
         "name": "name",
         "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "description",
+        "type": "string"
       }
     ],
     "name": "NewProject",
@@ -136,12 +190,6 @@
         "indexed": false,
         "internalType": "uint256",
         "name": "id",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amountAvailable",
         "type": "uint256"
       },
       {
@@ -293,6 +341,207 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "applicantToProjects",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "id",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "description",
+        "type": "string"
+      },
+      {
+        "internalType": "bool",
+        "name": "isRegistered",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "grantorToGrants",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "grantor",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "description",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountInWei",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "createdAt",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "deadlineTimestamp",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum GovTrack.GrantStatus",
+        "name": "status",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bool",
+        "name": "isRegistered",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "grants",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "grantor",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "description",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountInWei",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "createdAt",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "deadlineTimestamp",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum GovTrack.GrantStatus",
+        "name": "status",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bool",
+        "name": "isRegistered",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "projectToGrantRequest",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address payable",
+        "name": "project",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "grantId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum GovTrack.RequestStatus",
+        "name": "status",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
@@ -313,11 +562,6 @@
       {
         "internalType": "uint256",
         "name": "grantId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amountInUsd",
         "type": "uint256"
       },
       {
@@ -357,7 +601,17 @@
           },
           {
             "internalType": "uint256",
-            "name": "amountAvailable",
+            "name": "amountInWei",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "createdAt",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "deadlineTimestamp",
             "type": "uint256"
           },
           {
@@ -372,6 +626,118 @@
           }
         ],
         "internalType": "struct GovTrack.Grant[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_grantor",
+        "type": "address"
+      }
+    ],
+    "name": "getGrantsByGrantor",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "grantor",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amountInWei",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "createdAt",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "deadlineTimestamp",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum GovTrack.GrantStatus",
+            "name": "status",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bool",
+            "name": "isRegistered",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct GovTrack.Grant[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_applicant",
+        "type": "address"
+      }
+    ],
+    "name": "getProjectsByAppicant",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "id",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "owner",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "internalType": "bool",
+            "name": "isRegistered",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct GovTrack.Project[]",
         "name": "",
         "type": "tuple[]"
       }
@@ -464,6 +830,11 @@
         "internalType": "uint256",
         "name": "_amountInUsd",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_deadlineTimestamp",
+        "type": "uint256"
       }
     ],
     "name": "createGrant",
@@ -482,11 +853,6 @@
         "internalType": "uint256",
         "name": "_grantId",
         "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amountInUsd",
-        "type": "uint256"
       }
     ],
     "name": "requestGrant",
@@ -500,29 +866,43 @@
         "internalType": "uint256",
         "name": "_requestId",
         "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "isApproved",
-        "type": "bool"
       }
     ],
-    "name": "resolveRequest",
+    "name": "approveRequest",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getUsdPerEth",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_grantId",
+        "name": "_amountInUsd",
         "type": "uint256"
       }
     ],
-    "name": "closeGrant",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "name": "usdToWei",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   }
 ]

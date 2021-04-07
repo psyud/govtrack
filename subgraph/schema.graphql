@@ -1,44 +1,39 @@
 type Applicant @entity {
   id: ID!
   name: String!
+  phoneNumber: String!
+  emailAddress: String!
+  physicalAddress: String!
 
   projects: [Project!] @derivedFrom(field: "owner")
 }
 
 type Project @entity {
   id: ID!
+  ownerId: ID!
   name: String!
+  description: String!
 
   owner: Applicant!
-  grantRequest: Grant
+  grantRequest: GrantRequest
 }
 
 type Grantor @entity {
   id: ID!
-  name: String!
+  agencyName: String!
+  agencyCode: String!
 
   grants: [Grant!] @derivedFrom(field: "grantor")
 }
 
-type _Schema_ 
-  @fulltext (
-    name: "grantSearch",
-    language: en,
-    algorithm: rank,
-    include: [
-      {
-        entity: "Grant",
-        fields: [
-          { name: "name" }
-        ]
-      }
-    ]
-  )
-
 type Grant @entity {
   id: ID!
+  grantorId: ID!
   name: String!
-  amountAvailable: BigInt!
+  description: String!
+  amountInWei: BigInt!
+  createdAt: BigInt!
+  deadlineTimestamp: BigInt!
   status: GrantStatus!
 
   grantor: Grantor!
@@ -64,3 +59,19 @@ enum GrantStatus {
   Open,
   Closed
 }
+
+
+type _Schema_ 
+  @fulltext (
+    name: "grantSearch",
+    language: en,
+    algorithm: rank,
+    include: [
+      {
+        entity: "Grant",
+        fields: [
+          { name: "name" }
+        ]
+      }
+    ]
+  )
