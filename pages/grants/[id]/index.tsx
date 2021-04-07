@@ -45,6 +45,8 @@ GrantDetail.getInitialProps = async (props) => {
 
     const contract = getReadonlyContract();
     const grant = GrantOpportunity.parse(await contract.grants(id));
+    grant.agencyName = (await contract.addressToGrantor(grant.agencyAddress)).agencyName;
+
     return {
         id,
         grant

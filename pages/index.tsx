@@ -8,7 +8,7 @@ import { getReadonlyContract } from '../ethereum/serverContract';
 import GovTrack from '../models/contracts/GovTrack';
 import GrantOpportunity from '../models/GrantOppurtunity';
 
-export default function Index ({ data, addressToAgencies }) {
+export default function Index ({ data }) {
   return <Layout>
     <Grants data={data}/>
   </Layout>
