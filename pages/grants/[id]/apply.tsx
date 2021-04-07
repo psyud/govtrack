@@ -62,7 +62,6 @@ export default function Apply(props: IProps){
                                     <Table.Cell textAlign='right'><b>Agency</b></Table.Cell>
                                     <Table.Cell>{props.grant.agencyName}</Table.Cell>
                             </Table.Row>
-                            
                         </Table.Body>
                     </Table>
                     <Form.Field>

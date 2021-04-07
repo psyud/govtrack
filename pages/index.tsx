@@ -5,7 +5,7 @@ import { Button, Container, Header, Rating, Table } from 'semantic-ui-react';
 import Grants from '../components/Grants';
 import Layout from '../components/Layout';
 import { getReadonlyContract } from '../ethereum/serverContract';
-import GovTrack from '../models/contracts/GovTrack';
+import {RawGrant} from '../models/contracts/GovTrack';
 import GrantOpportunity from '../models/GrantOppurtunity';
 import { weiToUsd } from '../utils/numbers';
 
@@ -17,7 +17,7 @@ export default function Index ({ data }) {
 
 Index.getInitialProps = async () => {
   const contract = getReadonlyContract();
-  const rawData: GovTrack[] = await contract.getAllGrants();
+  const rawData: RawGrant[] = await contract.getAllGrants();
   const data = rawData.map(item => GrantOpportunity.parse(item));
 
   let addressToAgencies: Map<string, string> = new Map();

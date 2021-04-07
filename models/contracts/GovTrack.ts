@@ -1,7 +1,7 @@
 import { BigNumber } from "@ethersproject/bignumber";
 
-export default interface GovTrack {
-    id: BigNumber;
+export interface RawGrant {
+    id: string;
     grantor: string;
     name: string;
     description: string;
@@ -10,4 +10,11 @@ export default interface GovTrack {
     deadlineTimestamp: BigNumber;
     status: number;
     isRegistered: boolean
+}
+
+export interface RawProject {
+    id: string,
+    owner: string,
+    name: string;
+    description: string
 }

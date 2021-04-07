@@ -1,6 +1,6 @@
 import { toGrantStatusString } from "../utils/enums";
 import moment from 'moment';
-import GovTrack from "./contracts/GovTrack";
+import {RawGrant} from "./contracts/GovTrack";
 import { DATE_FORMAT } from '../utils/constants'; 
 import { BigNumber } from "@ethersproject/bignumber";
 
@@ -27,7 +27,7 @@ export default class GrantOpportunity {
         this.closedAt = closedAt;
     }
 
-    static parse(item: GovTrack) {
+    static parse(item: RawGrant) {
         return new GrantOpportunity(
             Number.parseInt(item.id.toString()), 
             item.name, 

@@ -26,6 +26,7 @@ contract GovTrack {
         bool isRegistered;
     }
     mapping(address => Applicant) public addressToApplicant;
+    mapping(address => Project[]) public applicantToProjects;
     event NewApplicant(address id, string name);
     
     struct Project {
@@ -94,6 +95,10 @@ contract GovTrack {
         return grantorToGrants[_grantor];
     }
 
+    function getProjectsByAppicant(address _applicant) public view returns(Project[] memory){
+        return applicantToProjects[_applicant];
+    }
+
     function registerAsApplicant(string memory _name, string memory _phoneNumber, string memory _emailAddress, string memory _physicalAddress) public {
         require(!addressToApplicant[msg.sender].isRegistered, "You already registered as an applicant");
         
@@ -134,6 +139,7 @@ contract GovTrack {
             isRegistered: true
         });
         addressToProject[_project] = newProject;
+        applicantToProjects[newProject.owner].push(newProject);
         emit NewProject(newProject.id, newProject.owner, newProject.name);
     }
 
