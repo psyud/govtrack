@@ -7,6 +7,7 @@ import Layout from '../components/Layout';
 import { getReadonlyContract } from '../ethereum/serverContract';
 import GovTrack from '../models/contracts/GovTrack';
 import GrantOpportunity from '../models/GrantOppurtunity';
+import { weiToUsd } from '../utils/numbers';
 
 export default function Index ({ data }) {
   return <Layout>
@@ -26,8 +27,10 @@ Index.getInitialProps = async () => {
     addressToAgencies.set(address, (await contract.addressToGrantor(address)).agencyName);
   }
 
+  const usdPerEth = await contract.getUsdPerEth();
   for(let grant of data){
     grant.agencyName = addressToAgencies.get(grant.agencyAddress);
+    grant.amountInUsd = weiToUsd(grant.amountInWei, usdPerEth);
   }
 
   return {

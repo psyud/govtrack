@@ -12,7 +12,7 @@ import {
 import { useSelector } from "react-redux";
 import { Role } from "../../../utils/enums";
 import { BigNumber } from "@ethersproject/bignumber";
-import { ethToUsd as weiToUsd } from "../../../utils/numbers";
+import { weiToUsd as weiToUsd } from "../../../utils/numbers";
 
 export interface IProps {
     id: any,

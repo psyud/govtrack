@@ -7,7 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { addDays } from "../../utils/datetimes";
 import { useRouter } from "next/router";
 import { getReadonlyContract } from "../../ethereum/serverContract";
-import { BigNumber } from "ethers/utils";
+import { BigNumber } from "@ethersproject/bignumber";
 
 
 export default function NewGrant() {

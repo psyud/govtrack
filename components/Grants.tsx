@@ -19,6 +19,7 @@ export default function (props: IProps) {
         <Table.HeaderCell>Opportunity Status</Table.HeaderCell>
         <Table.HeaderCell>Posted Date</Table.HeaderCell>
         <Table.HeaderCell>Close Date</Table.HeaderCell>
+        <Table.HeaderCell>Award</Table.HeaderCell>
       </Table.Row>
     </Table.Header>
 
@@ -37,6 +38,7 @@ export default function (props: IProps) {
                 <Table.Cell>{item.status}</Table.Cell>
                 <Table.Cell>{moment(item.createdAt).format(DATE_FORMAT)}</Table.Cell>
                 <Table.Cell>{moment(item.closedAt).format(DATE_FORMAT)}</Table.Cell>
+                <Table.Cell>${item.amountInUsd.toLocaleString()}</Table.Cell>
             </Table.Row>
         })}
     </Table.Body>

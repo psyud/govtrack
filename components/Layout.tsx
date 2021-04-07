@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Header from './Header';
 import Footer from './Footer';
 import 'semantic-ui-css/semantic.min.css'
+
 import {
     metaMaskInstalled,
     walletConnected,

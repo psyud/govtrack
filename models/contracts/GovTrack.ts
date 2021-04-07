@@ -1,4 +1,4 @@
-import { BigNumber } from "ethers/utils";
+import { BigNumber } from "@ethersproject/bignumber";
 
 export default interface GovTrack {
     id: BigNumber;

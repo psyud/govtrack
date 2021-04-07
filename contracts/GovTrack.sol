@@ -45,6 +45,7 @@ contract GovTrack {
         bool isRegistered;
     }
     mapping(address => Grantor) public addressToGrantor;
+    mapping(address => Grant[]) public grantorToGrants;
     event NewGrantor(address id, string name);
     
     struct Grant {
@@ -87,6 +88,10 @@ contract GovTrack {
 
     function getAllGrants() public view returns(Grant[] memory) {
         return grants;
+    }
+    
+    function getGrantsByGrantor(address _grantor) public view returns(Grant[] memory){
+        return grantorToGrants[_grantor];
     }
 
     function registerAsApplicant(string memory _name, string memory _phoneNumber, string memory _emailAddress, string memory _physicalAddress) public {
@@ -150,6 +155,7 @@ contract GovTrack {
         });
         grantCounter+=1;
         grants.push(newGrant);
+        grantorToGrants[newGrant.grantor].push(newGrant);
         emit NewGrant(newGrant.id, newGrant.grantor, newGrant.name, newGrant.amountInWei);
     }
     

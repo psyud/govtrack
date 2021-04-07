@@ -1,35 +1,46 @@
+import { BigNumber } from "@ethersproject/bignumber";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Button, Grid, Table } from "semantic-ui-react";
-
+import { getReadOnlyContract } from "../ethereum/clientContract";
+import GrantOpportunity from "../models/GrantOppurtunity";
+import { selectWallet } from "../slices/walletSlice";
+import { getWeb3Provider } from "../utils/clientUtils";
+import { weiToUsd } from "../utils/numbers";
+import Grants from "./Grants";
 
 export default function Grantor() {
+    const [ grants, setGrants ] = useState([] as GrantOpportunity[]);
+    useEffect(()=>{
+        (async ()=>{
+            const provider = await getWeb3Provider();
+            const contract = await getReadOnlyContract();
+            const raw = await contract.getGrantsByGrantor(provider.selectedAddress);
+            
+            let agencyName: string;
+            {
+                agencyName = (await contract.addressToGrantor(raw[0].grantor)).agencyName;
+            }
+            const usdPerEth = await contract.getUsdPerEth();
+            setGrants(raw.map(item => {
+                const grant = GrantOpportunity.parse(item)
+                grant.agencyName = agencyName;
+                grant.amountInUsd = weiToUsd(grant.amountInWei, BigNumber.from(usdPerEth));
+                return grant;
+            }));
+        })();
+    }, [])
+
     return <>
         <Grid>
-            <Grid.Row textAlign='right'>
+            <Grid.Row style = {{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Link href="/grants/new">
                     <Button primary>Create Funding Opportunity</Button>
                 </Link>
             </Grid.Row>
             <Grid.Row>
-            <Table>
-                 <Table.Header>
-                     <Table.Row>
-                            <Table.Cell>Funding Opportunity Number</Table.Cell>
-                            <Table.Cell>Funding Opportunity</Table.Cell>
-                            <Table.Cell>Description</Table.Cell>
-                            <Table.Cell>Award</Table.Cell>
-                     </Table.Row>
-                 </Table.Header>
-                 <Table.Body>
-                     <Table.Row>
-                        <Table.Cell>145435</Table.Cell>
-                        <Table.Cell>Project Catalyst</Table.Cell>
-                        <Table.Cell>Lorem ipsum dolor sit amet</Table.Cell>
-                        <Table.Cell>$100,000</Table.Cell>
-                     </Table.Row>
-                 </Table.Body>
-             </Table>
+                <Grants data={grants}/>
             </Grid.Row>
         </Grid>
     </>
