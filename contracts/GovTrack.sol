@@ -21,7 +21,6 @@ contract GovTrack {
         bool isRegistered;
     }
     mapping(address => Applicant) public addressToApplicant;
-    mapping(address => Project[]) public applicantToProjects;
     event NewApplicant(address id, string name, string phoneNumber, string emailAddress, string physicalAddress);
     
     struct Project {
@@ -41,7 +40,6 @@ contract GovTrack {
         bool isRegistered;
     }
     mapping(address => Grantor) public addressToGrantor;
-    mapping(address => Grant[]) public grantorToGrants;
     event NewGrantor(address id, string agencyName, string agencyCode);
     
     struct Grant {
@@ -82,18 +80,6 @@ contract GovTrack {
     enum GrantStatus {
         Open,
         Closed
-    }
-
-    function getAllGrants() public view returns(Grant[] memory) {
-        return grants;
-    }
-    
-    function getGrantsByGrantor(address _grantor) public view returns(Grant[] memory){
-        return grantorToGrants[_grantor];
-    }
-
-    function getProjectsByAppicant(address _applicant) public view returns(Project[] memory){
-        return applicantToProjects[_applicant];
     }
 
     function registerAsApplicant(string memory _name, string memory _phoneNumber, string memory _emailAddress, string memory _physicalAddress) public {
@@ -141,7 +127,6 @@ contract GovTrack {
             isRegistered: true
         });
         addressToProject[_project] = newProject;
-        applicantToProjects[newProject.owner].push(newProject);
         emit NewProject(newProject.id, newProject.owner, newProject.name, newProject.description);
     }
 
@@ -163,7 +148,6 @@ contract GovTrack {
         });
         grantCounter+=1;
         grants.push(newGrant);
-        grantorToGrants[newGrant.grantor].push(newGrant);
         emit NewGrant(
             newGrant.id, 
             newGrant.grantor, 

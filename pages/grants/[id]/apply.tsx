@@ -9,20 +9,13 @@ import { getReadonlyContract as getServerContract } from "../../../ethereum/serv
 import GrantOpportunity from "../../../models/GrantOppurtunity";
 import Project from "../../../models/Project";
 import { getWeb3Provider } from "../../../utils/clientUtils";
+import { BigNumber } from "@ethersproject/bignumber";
+import { GetServerSideProps } from "next";
+import client from '../../../graphql/client';
+import { GET_APPLICANT_PROJECTS, GET_GRANT_BY_ID } from "../../../graphql/queries";
 
-const projects = [
-    {
-        key: 'Project Catalyst',
-        text: 'Project Catalyst',
-        value: 'Project Catalyst'
-    }
-];
-
-interface IProps{
-    grant: GrantOpportunity
-}
-
-export default function Apply(props: IProps){
+export default function Apply({ data, usdPerEth }){
+    const grant = GrantOpportunity.parse(data, usdPerEth);
     const router = useRouter();
 
     const [ projects, setProjects ] = useState([] as Project[]);
@@ -33,9 +26,13 @@ export default function Apply(props: IProps){
     useEffect(() => {
         (async() => {
             const provider = await getWeb3Provider();
-            const contract = await getReadOnlyContract();
-            const rawData = await contract.getProjectsByAppicant(provider.selectedAddress);
-            setProjects(rawData.map(item => Project.parse(item)));
+            const { data } = await client.query({
+                query: GET_APPLICANT_PROJECTS,
+                variables: {
+                    applicantId: provider.selectedAddress
+                }
+            });
+            setProjects(data.projects.map(item => Project.parse(item)));
         })();
     }, []);
 
@@ -48,7 +45,7 @@ export default function Apply(props: IProps){
         try{
             setIsLoading(true);
             const contract = await getRwContract();
-            await contract.requestGrant(selectedProject.id, props.grant.id);
+            await contract.requestGrant(selectedProject.id, grant.id);
             router.push('/');
         }catch(e){
 
@@ -57,7 +54,7 @@ export default function Apply(props: IProps){
         }
     }
 
-    const isFormValid = () => selectedProject && props.grant && agreedToTerms;
+    const isFormValid = () => selectedProject && grant && agreedToTerms;
 
     return <Layout>
         <Grid columns={3}>
@@ -74,7 +71,8 @@ export default function Apply(props: IProps){
                                 return {
                                     key: item.id,
                                     text: item.name,
-                                    value: item.id
+                                    value: item.id,
+                                    disabled: item.isAvailable()
                                 }
                             })}
                             onChange={(e, data) => _setSelectedProject(data.value as string)}
@@ -83,7 +81,7 @@ export default function Apply(props: IProps){
                     {
                         projects.length === 0 && <Message>Don't have any project? Click <Link href="/projects/new">here</Link> to create one.</Message>
                     }
-                    <Application project={selectedProject} grant={props.grant}/>
+                    <Application project={selectedProject} grant={grant}/>
                     <Form.Field>
                         <Checkbox checked={agreedToTerms} onChange={() => setAgreedToTerms(!agreedToTerms)} label='I agree to the Terms and Conditions' />
                     </Form.Field>
@@ -98,18 +96,21 @@ export default function Apply(props: IProps){
     </Layout>
 }
 
-Apply.getInitialProps = async (props: any) => {
-    const { id } = props.query;
-    if(typeof id === 'undefined'){
-        return {};
-    }
 
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const contract = getServerContract();
-    const grant = GrantOpportunity.parse(await contract.grants(id));
-    grant.agencyName = (await contract.addressToGrantor(grant.agencyAddress)).agencyName;
+    const usdPerEth = await contract.getUsdPerEth() as BigNumber;
+    const { data } = await client.query({ 
+        query: GET_GRANT_BY_ID,
+        variables: {
+            grantId: ctx.query.id
+        }
+    });
 
     return {
-        id,
-        grant
+      props: {
+        data: data.grant,
+        usdPerEth: usdPerEth.toNumber()
+      }
     }
-}
+  }

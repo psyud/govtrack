@@ -5,7 +5,6 @@ import GrantInfo from "../../../components/GrantInfo";
 import Layout from "../../../components/Layout"
 import { getReadonlyContract } from "../../../ethereum/serverContract";
 import GrantOpportunity from "../../../models/GrantOppurtunity";
-
 import {
     selectWallet
 } from '../../../slices/walletSlice';
@@ -56,6 +55,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
     return {
       props: {
+        id: ctx.query.id,
         data: data.grant,
         usdPerEth: usdPerEth.toNumber()
       }

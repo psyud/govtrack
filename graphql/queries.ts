@@ -60,7 +60,29 @@ export const GET_APPLICANT_PROJECTS = gql`
         projects(ownerId: $applicantId){
             id,
             name,
-            description
+            description,
+            grantRequest
+        }
+    }
+`
+
+export const GET_GRANT_REQUESTS_FOR_PROJECT = gql`
+    query getGrantRequestsForProject($projectId: ID!) {
+        grantRequests(project: $projectId) {
+            grant {
+                id,
+                name,
+                description,
+                amountInWei,
+                createdAt,
+                deadlineTimestamp,
+                status,
+                grantor {
+                    agencyName,
+                    agencyCode
+                }
+            }
+            status
         }
     }
 `

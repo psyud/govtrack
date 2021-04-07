@@ -1,33 +1,32 @@
+import { GetServerSideProps } from "next";
 import Application from "../../components/Applicantion";
 import Layout from "../../components/Layout";
 import { getReadonlyContract } from "../../ethereum/serverContract";
-import GrantOpportunity from "../../models/GrantOppurtunity";
-import Project from "../../models/Project";
+import client from '../../graphql/client';
+import { BigNumber } from "@ethersproject/bignumber";
+import { GET_GRANT_REQUESTS_FOR_PROJECT } from "../../graphql/queries";
 
 
-
-export default function ProjectDetail({ project, grant }){
+export default function ProjectDetail({ data, usdPerEth }){
     return <Layout>
-        <Application project={project} grant={grant}/>
+        {/* <Application project={project} grant={grant}/> */}
     </Layout>
 }
 
-ProjectDetail.getInitialProps = async props => {
-    const { id } = props.query;
-    if(typeof id === 'undefined'){
-        return {};
-    }
-
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const contract = getReadonlyContract();
-    const project = Project.parse(await contract.addressToProject(id));
-    let grant = null;
-    const grantRequest = await contract.projectToGrantRequest(id);
-    if(grantRequest.project === id){
-        grant = GrantOpportunity.parse(await contract.grants(grantRequest.grantId));
-    }
-
+    const usdPerEth = await contract.getUsdPerEth() as BigNumber;
+    const { data } = await client.query({ 
+        query: GET_GRANT_REQUESTS_FOR_PROJECT,
+        variables: {
+            projectId: ctx.query.id
+        }
+    });
+    console.log(data);
     return {
-        project,
-        grant
+      props: {
+        data: data.grantRequests,
+        usdPerEth: usdPerEth.toNumber()
+      }
     }
-}
+  }
