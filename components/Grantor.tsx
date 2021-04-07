@@ -19,7 +19,7 @@ export default function Grantor() {
             const raw = await contract.getGrantsByGrantor(provider.selectedAddress);
             
             let agencyName: string;
-            {
+            if(raw.length > 0){
                 agencyName = (await contract.addressToGrantor(raw[0].grantor)).agencyName;
             }
             const usdPerEth = await contract.getUsdPerEth();

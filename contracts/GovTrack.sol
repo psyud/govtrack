@@ -73,6 +73,8 @@ contract GovTrack {
     }
     uint256 requestCounter;
     GrantRequest[] public requests;
+    mapping(address => GrantRequest) public projectToGrantRequest;
+
     event NewGrantRequest(uint256 id, address project, uint256 grantId);
     event UpdateGrantRequest(uint256 id, RequestStatus status);
             
@@ -179,6 +181,7 @@ contract GovTrack {
         });
         requestCounter += 1;
         requests.push(newGrantRequest);
+        projectToGrantRequest[newGrantRequest.project] = newGrantRequest;
         emit NewGrantRequest(newGrantRequest.id, newGrantRequest.project, newGrantRequest.grantId);
     }
     

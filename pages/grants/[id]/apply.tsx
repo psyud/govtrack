@@ -1,9 +1,14 @@
 import Link from "next/link";
-import React, { Component } from "react";
+import { useRouter } from "next/router";
+import React, { Component, useEffect, useState } from "react";
 import { Button, Checkbox, Dropdown, Form, Grid, Message, Table } from "semantic-ui-react";
+import Application from "../../../components/Applicantion";
 import Layout from "../../../components/Layout";
+import { getReadOnlyContract, getRwContract } from "../../../ethereum/clientContract";
 import { getReadonlyContract as getServerContract } from "../../../ethereum/serverContract";
 import GrantOpportunity from "../../../models/GrantOppurtunity";
+import Project from "../../../models/Project";
+import { getWeb3Provider } from "../../../utils/clientUtils";
 
 const projects = [
     {
@@ -18,6 +23,42 @@ interface IProps{
 }
 
 export default function Apply(props: IProps){
+    const router = useRouter();
+
+    const [ projects, setProjects ] = useState([] as Project[]);
+    const [ selectedProject, setSelectedProject ] = useState(null);
+    const [ agreedToTerms, setAgreedToTerms ] = useState(false);
+    const [ isLoading, setIsLoading ] = useState(false);
+
+    useEffect(() => {
+        (async() => {
+            const provider = await getWeb3Provider();
+            const contract = await getReadOnlyContract();
+            const rawData = await contract.getProjectsByAppicant(provider.selectedAddress);
+            setProjects(rawData.map(item => Project.parse(item)));
+        })();
+    }, []);
+
+    const _setSelectedProject = (address: string) => {
+        const filtered = projects.filter(i => i.id === address);
+        setSelectedProject(filtered.length === 1 ? filtered[0] : null);
+    }
+
+    const handleSubmit = async () => {
+        try{
+            setIsLoading(true);
+            const contract = await getRwContract();
+            await contract.requestGrant(selectedProject.id, props.grant.id);
+            router.push('/');
+        }catch(e){
+
+        }finally{
+            setIsLoading(false);
+        }
+    }
+
+    const isFormValid = () => selectedProject && props.grant && agreedToTerms;
+
     return <Layout>
         <Grid columns={3}>
             <Grid.Column width={4}></Grid.Column>
@@ -29,46 +70,25 @@ export default function Apply(props: IProps){
                             placeholder='Select Project'
                             fluid
                             selection
-                            options={projects}
+                            options={projects.map(item => {
+                                return {
+                                    key: item.id,
+                                    text: item.name,
+                                    value: item.id
+                                }
+                            })}
+                            onChange={(e, data) => _setSelectedProject(data.value as string)}
                         />
                     </Form.Field>
-                    <Message>Don't have any project? Click <Link href="/projects/new">here</Link> to create one.</Message>
-                    <Table fixed>
-                        <Table.Body>
-                            <Table.Row>
-                                <Table.Cell textAlign='right'><b>Project Name</b></Table.Cell>
-                                <Table.Cell>Project Catalyst</Table.Cell>
-                            </Table.Row>
-                            <Table.Row>
-                                <Table.Cell textAlign='right'><b>Description</b></Table.Cell>
-                                <Table.Cell>Lorem ipsum dolor sit amet, consectetur adipiscing elit</Table.Cell>
-                            </Table.Row>
-                            </Table.Body>
-                    </Table>
-                    <div style={{ textAlign: 'center'}}>
-                        <Button disabled>Applying to</Button>
-                    </div>
-                    <Table fixed>
-                        <Table.Body>
-                            <Table.Row>
-                                    <Table.Cell textAlign='right'><b>Funding Opportunity Number</b></Table.Cell>
-                                    <Table.Cell>{props.grant.id}</Table.Cell>
-                            </Table.Row>
-                            <Table.Row>
-                                    <Table.Cell textAlign='right'><b>Funding Opportunity Title</b></Table.Cell>
-                                    <Table.Cell>{props.grant.title}</Table.Cell>
-                            </Table.Row>
-                            <Table.Row>
-                                    <Table.Cell textAlign='right'><b>Agency</b></Table.Cell>
-                                    <Table.Cell>{props.grant.agencyName}</Table.Cell>
-                            </Table.Row>
-                        </Table.Body>
-                    </Table>
+                    {
+                        projects.length === 0 && <Message>Don't have any project? Click <Link href="/projects/new">here</Link> to create one.</Message>
+                    }
+                    <Application project={selectedProject} grant={props.grant}/>
                     <Form.Field>
-                        <Checkbox label='I agree to the Terms and Conditions' />
+                        <Checkbox checked={agreedToTerms} onChange={() => setAgreedToTerms(!agreedToTerms)} label='I agree to the Terms and Conditions' />
                     </Form.Field>
                     <div style={{ textAlign: 'center' }}>
-                        <Button  type='submit'>Submit</Button>
+                        <Button onClick={() => handleSubmit()} disabled={!isFormValid() || isLoading} type='submit'>Submit</Button>
                     </div>
                 </Form>
             </Grid.Column>
