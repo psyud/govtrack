@@ -33,3 +33,25 @@ export const GET_GRANT_BY_ID = gql`
         }
     }
 `
+
+export const GET_GRANTOR_BY_ID = gql`
+    query getGrantorById($grantorId: ID!) {
+        grantor(id: $grantorId) {
+            id,
+            agencyName,
+            agencyCode,
+            grants {
+                id,
+                name,
+                amountInWei,
+                createdAt,
+                deadlineTimestamp,
+                status,
+                
+                grantor {
+                    agencyName
+                }
+            }
+        }
+    }
+`

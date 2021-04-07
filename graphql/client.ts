@@ -1,8 +1,9 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
-import dotenv from 'dotenv';
-dotenv.config();
+import getConfig from 'next/config';
+
+const { publicRuntimeConfig } = getConfig();
 
 export default new ApolloClient({ 
-    uri: process.env.SUBGRAPH_API, 
+    uri: publicRuntimeConfig.SUBGRAPH_API, 
     cache: new InMemoryCache()
 });

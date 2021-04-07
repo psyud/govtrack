@@ -3,7 +3,7 @@
  * Invokes when user connects their wallet
  * Or when user needs to interact with blockchain
  */
- import getConfig from 'next/config';
+import getConfig from 'next/config';
 import { ethers } from "ethers";
 import compilation from '../build/contracts/GovTrack.json';
 import { getWeb3Provider, isMetaMaskInstalled } from "../utils/clientUtils";
