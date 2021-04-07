@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/xrenegad3/govtrack#readme",
   "dependencies": {
+    "@apollo/client": "^3.3.14",
     "@chainlink/contracts": "^0.1.6",
     "@graphprotocol/graph-cli": "0.20.0",
     "@graphprotocol/graph-ts": "0.20.0",

@@ -1,39 +1,29 @@
-import Head from 'next/head'
-import Link from 'next/link';
-import React, { Component } from 'react';
-import { Button, Container, Header, Rating, Table } from 'semantic-ui-react';
+import React from 'react';
 import Grants from '../components/Grants';
 import Layout from '../components/Layout';
-import { getReadonlyContract } from '../ethereum/serverContract';
-import {RawGrant} from '../models/contracts/GovTrack';
+import { GetServerSideProps } from 'next';
+import client from '../graphql/client';
+import { GET_GRANTS } from '../graphql/queries';
 import GrantOpportunity from '../models/GrantOppurtunity';
-import { weiToUsd } from '../utils/numbers';
+import { getReadonlyContract } from '../ethereum/serverContract';
+import { BigNumber } from '@ethersproject/bignumber';
 
-export default function Index ({ data }) {
+export default function Index ({ data, usdPerEth }) {
+  const grants = data.map(item =>  GrantOpportunity.parse(item, usdPerEth));
+
   return <Layout>
-    <Grants data={data}/>
+    <Grants grants={grants}/>
   </Layout>
 }
 
-Index.getInitialProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ctx => {
   const contract = getReadonlyContract();
-  const rawData: RawGrant[] = await contract.getAllGrants();
-  const data = rawData.map(item => GrantOpportunity.parse(item));
-
-  let addressToAgencies: Map<string, string> = new Map();
-  const addresses = new Set(data.map(item => item.agencyAddress));
-
-  for(let address of addresses){
-    addressToAgencies.set(address, (await contract.addressToGrantor(address)).agencyName);
-  }
-
-  const usdPerEth = await contract.getUsdPerEth();
-  for(let grant of data){
-    grant.agencyName = addressToAgencies.get(grant.agencyAddress);
-    grant.amountInUsd = weiToUsd(grant.amountInWei, usdPerEth);
-  }
-
+  const usdPerEth = await contract.getUsdPerEth() as BigNumber;
+  const { data } = await client.query({ query: GET_GRANTS });
   return {
-    data
+    props: {
+      data: data.grants,
+      usdPerEth: usdPerEth.toNumber()
+    }
   }
 }

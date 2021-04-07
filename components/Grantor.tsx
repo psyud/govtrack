@@ -40,7 +40,7 @@ export default function Grantor() {
                 </Link>
             </Grid.Row>
             <Grid.Row>
-                <Grants data={grants}/>
+                <Grants grants={grants}/>
             </Grid.Row>
         </Grid>
     </>

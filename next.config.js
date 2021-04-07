@@ -7,6 +7,6 @@ module.exports = {
     },
     publicRuntimeConfig: {
         CONTRACT_ADDRESS: process.env.CONTRACT_ADDRESS,
-        SUBGRAPH_API: proces.env.SUBGRAPH_API
+        SUBGRAPH_API: process.env.SUBGRAPH_API
     },
   }

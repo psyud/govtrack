@@ -3,6 +3,7 @@ import moment from 'moment';
 import {RawGrant} from "./contracts/GovTrack";
 import { DATE_FORMAT } from '../utils/constants'; 
 import { BigNumber } from "@ethersproject/bignumber";
+import { weiToUsd } from "../utils/numbers";
 
 export default class GrantOpportunity {
     id: number;
@@ -13,27 +14,26 @@ export default class GrantOpportunity {
     status: string;
     createdAt: Date;
     closedAt: Date;
-    amountInWei: BigNumber;
     amountInUsd: number;
 
-    constructor(id: number, title: string, description: string, amountInWei: BigNumber, agency: string, status: string, createdAt: Date, closedAt: Date) {
+    constructor(id: number, title: string, description: string, amountInUsd: number, agency: string, status: string, createdAt: Date, closedAt: Date) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.amountInWei = amountInWei;
-        this.agencyAddress = agency;
+        this.amountInUsd = amountInUsd;
+        this.agencyName = agency;
         this.status = status;
         this.createdAt = createdAt;
         this.closedAt = closedAt;
     }
 
-    static parse(item: RawGrant) {
+    static parse(item: any, usdPerEth: number) {
         return new GrantOpportunity(
-            Number.parseInt(item.id.toString()), 
+            Number.parseInt(item.id), 
             item.name, 
             item.description,
-            item.amountInWei,
-            item.grantor, 
+            weiToUsd(BigNumber.from(item.amountInWei), BigNumber.from(usdPerEth)),
+            item.grantor.agencyName, 
             toGrantStatusString(item.status), 
             new Date(Number.parseInt(item.createdAt.toString()) * 1000), 
             new Date(Number.parseInt(item.deadlineTimestamp.toString()) * 1000)

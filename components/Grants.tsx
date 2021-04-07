@@ -6,7 +6,7 @@ import GrantOpportunity from "../models/GrantOppurtunity";
 import { DATE_FORMAT } from "../utils/constants";
 
 interface IProps {
-    data: GrantOpportunity[]
+    grants: GrantOpportunity[]
 }
 
 export default function (props: IProps) {
@@ -24,7 +24,7 @@ export default function (props: IProps) {
     </Table.Header>
 
     <Table.Body>
-        {props.data.map((item: GrantOpportunity) => {
+        {props.grants.map((item: GrantOpportunity) => {
             return <Table.Row key={item.id}>
                 <Table.Cell>
                         {item.id}
