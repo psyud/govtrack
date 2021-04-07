@@ -13,50 +13,52 @@ import { useSelector } from "react-redux";
 import { Role } from "../../../utils/enums";
 import { BigNumber } from "@ethersproject/bignumber";
 import { weiToUsd as weiToUsd } from "../../../utils/numbers";
+import { GetServerSideProps } from "next";
+import { GET_GRANTS, GET_GRANT_BY_ID } from "../../../graphql/queries";
+import client from "../../../graphql/client";
 
 export interface IProps {
     id: any,
-    grant: GrantOpportunity
+    data: any,
+    usdPerEth: number
 }
 
-function GrantDetail(props: IProps) {
+export default function GrantDetail({ id, data, usdPerEth }) {
     const { isLoggedInAs, isLoggedIn } = useSelector(selectWallet);
+    const grant = GrantOpportunity.parse(data, usdPerEth)
+
     return <Layout>
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <div>
-                    <Link href="/grants/[id]/applicants" as={`/grants/${props.id}/applicants`}>
+                    <Link href="/grants/[id]/applicants" as={`/grants/${id}/applicants`}>
                         <Button primary>View Applicants</Button>
                     </Link>
                     {
-                        isLoggedInAs !== Role.Grantor && <Link href="/grants/[id]/apply" as={`/grants/${props.id}/apply`}>
+                        isLoggedInAs !== Role.Grantor && <Link href="/grants/[id]/apply" as={`/grants/${id}/apply`}>
                             <Button disabled={!isLoggedIn} color='red'>Apply</Button>
                         </Link>
                     }
                 </div>
                 
             </div>
-            <GrantInfo grant={props.grant}/>
+            <GrantInfo grant={grant}/>
         </Layout>
 }
 
-GrantDetail.getInitialProps = async (props) => {
-    const { id } = props.query;
-    if(typeof id === 'undefined'){
-        return {};
-    }
-
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const contract = getReadonlyContract();
     const usdPerEth = await contract.getUsdPerEth() as BigNumber;
-
-    const grant = GrantOpportunity.parse(await contract.grants(id));
-
-    grant.agencyName = (await contract.addressToGrantor(grant.agencyAddress)).agencyName;
-    grant.amountInUsd = weiToUsd(grant.amountInWei, usdPerEth);
+    const { data } = await client.query({ 
+        query: GET_GRANT_BY_ID,
+        variables: {
+            grantId: ctx.query.id
+        }
+    });
 
     return {
-        id,
-        grant
+      props: {
+        data: data.grant,
+        usdPerEth: usdPerEth.toNumber()
+      }
     }
-}
-
-export default GrantDetail;
+  }

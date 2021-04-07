@@ -22,7 +22,7 @@ export function handleNewGrantor(event: NewGrantor): void {
 }
 
 export function handleNewGrant(event: NewGrant): void {
-    let grant = new Grant(event.params.id.toHex());
+    let grant = new Grant(event.params.id.toString());
 
     grant.name = event.params.name;
     grant.description = event.params.description;
@@ -48,7 +48,7 @@ export function handleNewProject(event: NewProject): void {
 }
 
 export function handleUpdateGrant(event: UpdateGrant): void {
-    let grant = Grant.load(event.params.id.toHex());
+    let grant = Grant.load(event.params.id.toString());
 
     grant.status = event.params.status;
 
@@ -56,7 +56,7 @@ export function handleUpdateGrant(event: UpdateGrant): void {
 }
 
 export function handleNewGrantRequest(event: NewGrantRequest): void {
-    let request = new GrantRequest(event.params.id.toHex());
+    let request = new GrantRequest(event.params.id.toString());
 
     request.status = event.params.status;
     request.project = event.params.project.toHex();
@@ -66,7 +66,7 @@ export function handleNewGrantRequest(event: NewGrantRequest): void {
 }
 
 export function handleUpdateGrantRequeset(event: UpdateGrantRequest): void {
-    let request = GrantRequest.load(event.params.id.toHex());
+    let request = GrantRequest.load(event.params.id.toString());
 
     request.status = event.params.status;
 

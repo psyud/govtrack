@@ -16,7 +16,7 @@ export default function Index ({ data, usdPerEth }) {
   </Layout>
 }
 
-export const getServerSideProps: GetServerSideProps = async ctx => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const contract = getReadonlyContract();
   const usdPerEth = await contract.getUsdPerEth() as BigNumber;
   const { data } = await client.query({ query: GET_GRANTS });
