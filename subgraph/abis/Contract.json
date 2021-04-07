@@ -122,6 +122,12 @@
         "internalType": "uint256",
         "name": "grantId",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum GovTrack.RequestStatus",
+        "name": "status",
+        "type": "uint8"
       }
     ],
     "name": "NewGrantRequest",

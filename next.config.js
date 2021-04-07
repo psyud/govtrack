@@ -6,6 +6,7 @@ module.exports = {
         INFURA_KEY: process.env.INFURA_KEY
     },
     publicRuntimeConfig: {
-        CONTRACT_ADDRESS: process.env.CONTRACT_ADDRESS
+        CONTRACT_ADDRESS: process.env.CONTRACT_ADDRESS,
+        SUBGRAPH_API: proces.env.SUBGRAPH_API
     },
   }

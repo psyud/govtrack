@@ -33,7 +33,7 @@ dataSources:
           handler: handleNewGrant
         - event: UpdateGrant(uint256,uint8)
           handler: handleUpdateGrant
-        - event: NewGrantRequest(uint256,address,uint256)
+        - event: NewGrantRequest(uint256,address,uint256,uint8)
           handler: handleNewGrantRequest
         - event: UpdateGrantRequest(uint256,uint8)
           handler: handleUpdateGrantRequeset

@@ -10,7 +10,6 @@ type Applicant @entity {
 
 type Project @entity {
   id: ID!
-  ownerId: Bytes!
   name: String!
   description: String!
 
@@ -28,7 +27,6 @@ type Grantor @entity {
 
 type Grant @entity {
   id: ID!
-  grantorId: Bytes!
   name: String!
   description: String!
   amountInWei: BigInt!
@@ -36,14 +34,12 @@ type Grant @entity {
   deadlineTimestamp: BigInt!
   status: Int!
 
-  grantor: Grantor!
+  grantor: Grantor! 
   grantRequests: [GrantRequest!] @derivedFrom(field: "grant")
 }
 
 type GrantRequest @entity {
   id: ID!
-  projectId: Bytes!
-  grantId: BigInt!
   status: Int!
 
   project: Project!
