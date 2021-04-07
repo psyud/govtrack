@@ -41,7 +41,7 @@ export default function GrantInfo(props: IProps) {
                         </Table.Row>
                         <Table.Row>
                             <Table.Cell textAlign='right'><b>Estimated Total Program Funding</b></Table.Cell>
-                            <Table.Cell>${grant.amount}</Table.Cell>
+                            <Table.Cell>${grant.amountInUsd}</Table.Cell>
                         </Table.Row>
                         <Table.Row>
                             <Table.Cell textAlign='right'><b>Funding Instrument Type</b></Table.Cell>

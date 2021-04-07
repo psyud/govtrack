@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import Header from './Header';
 import Footer from './Footer';
 import 'semantic-ui-css/semantic.min.css'
-
 import {
     metaMaskInstalled,
     walletConnected,
@@ -14,7 +13,6 @@ import {
 import { getWeb3Provider, isMetaMaskInstalled, isWalletConnected } from '../utils/clientUtils';
 import { getReadOnlyContract } from '../ethereum/clientContract';
 import { Role } from '../utils/enums';
-
 
 interface IProps {
     children: any
@@ -53,4 +51,3 @@ export default function Layout(props: IProps) {
         <Footer/>
     </Container>
 }
-

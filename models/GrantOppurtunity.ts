@@ -2,6 +2,7 @@ import { toGrantStatusString } from "../utils/enums";
 import moment from 'moment';
 import GovTrack from "./contracts/GovTrack";
 import { DATE_FORMAT } from '../utils/constants'; 
+import { BigNumber } from "@ethersproject/bignumber";
 
 export default class GrantOpportunity {
     id: number;
@@ -12,17 +13,18 @@ export default class GrantOpportunity {
     status: string;
     createdAt: Date;
     closedAt: Date;
-    amount: number
+    amountInWei: BigNumber;
+    amountInUsd: number;
 
-    constructor(id: number, title: string, description: string, agency: string, status: string, createdAt: Date, closedAt: Date) {
+    constructor(id: number, title: string, description: string, amountInWei: BigNumber, agency: string, status: string, createdAt: Date, closedAt: Date) {
         this.id = id;
         this.title = title;
         this.description = description;
+        this.amountInWei = amountInWei;
         this.agencyAddress = agency;
         this.status = status;
         this.createdAt = createdAt;
         this.closedAt = closedAt;
-        this.amount = 100000;
     }
 
     static parse(item: GovTrack) {
@@ -30,6 +32,7 @@ export default class GrantOpportunity {
             Number.parseInt(item.id.toString()), 
             item.name, 
             item.description,
+            item.amountInWei,
             item.grantor, 
             toGrantStatusString(item.status), 
             new Date(Number.parseInt(item.createdAt.toString()) * 1000), 

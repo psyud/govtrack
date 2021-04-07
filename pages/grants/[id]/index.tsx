@@ -11,6 +11,8 @@ import {
 } from '../../../slices/walletSlice';
 import { useSelector } from "react-redux";
 import { Role } from "../../../utils/enums";
+import { BigNumber } from "@ethersproject/bignumber";
+import { ethToUsd as weiToUsd } from "../../../utils/numbers";
 
 export interface IProps {
     id: any,
@@ -44,8 +46,12 @@ GrantDetail.getInitialProps = async (props) => {
     }
 
     const contract = getReadonlyContract();
+    const usdPerEth = await contract.getUsdPerEth() as BigNumber;
+
     const grant = GrantOpportunity.parse(await contract.grants(id));
+
     grant.agencyName = (await contract.addressToGrantor(grant.agencyAddress)).agencyName;
+    grant.amountInUsd = weiToUsd(grant.amountInWei, usdPerEth);
 
     return {
         id,
