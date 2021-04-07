@@ -1,20 +1,25 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { Button, Grid } from "semantic-ui-react";
-import { getReadOnlyContract } from "../ethereum/clientContract";
-import { RawProject } from "../models/contracts/GovTrack";
 import Project from "../models/Project";
 import { getWeb3Provider } from "../utils/clientUtils";
 import Projects from "./Projects";
+import client from '../graphql/client';
+import { GET_APPLICANT_PROJECTS } from "../graphql/queries";
 
 export default function Applicant() {
     const [ projects, setProjects ] = useState([] as Project[]);
     useEffect(() => {
         (async () => {
             const provider = await getWeb3Provider();
-            const contract = await getReadOnlyContract();
-            const rawData = await contract.getProjectsByAppicant(provider.selectedAddress);
-            setProjects(rawData.map((item: RawProject) => Project.parse(item)));
+            const { data } = await client.query({
+                query: GET_APPLICANT_PROJECTS,
+                variables: {
+                    applicantId: provider.selectedAddress
+                }
+            })
+
+            setProjects(data.projects.map(item => Project.parse(item)));
         })();
     }, []);
 

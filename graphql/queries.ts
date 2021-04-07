@@ -55,3 +55,12 @@ export const GET_GRANTOR_BY_ID = gql`
         }
     }
 `
+export const GET_APPLICANT_PROJECTS = gql`
+    query getApplicantProjects($applicantId: ID!) {
+        projects(ownerId: $applicantId){
+            id,
+            name,
+            description
+        }
+    }
+`
