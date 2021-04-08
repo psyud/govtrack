@@ -7,11 +7,15 @@ import { GET_GRANTS } from '../graphql/queries';
 import Grant from '../models/Grant';
 import { getReadonlyContract } from '../ethereum/serverContract';
 import { BigNumber } from '@ethersproject/bignumber';
+import { Header } from 'semantic-ui-react';
 
 export default function Index ({ data, usdPerEth }) {
   const grants = data.map(item =>  Grant.parse(item, usdPerEth));
 
   return <Layout>
+    <div style={{ textAlign: 'center'}}>
+      <Header>All Grant Opportunities</Header>
+    </div>
     <Grants grants={grants}/>
   </Layout>
 }

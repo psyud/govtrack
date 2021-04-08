@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import { Button } from "semantic-ui-react";
+import { Button, Header } from "semantic-ui-react";
 import GrantInfo from "../../../components/GrantInfo";
 import Layout from "../../../components/Layout"
 import { getReadonlyContract } from "../../../ethereum/serverContract";
@@ -37,7 +37,9 @@ export default function GrantDetail({ id, data, usdPerEth }) {
                         </Link>
                     }
                 </div>
-                
+            </div>
+            <div style={{ textAlign: 'center' }}>
+                <Header>Grant Detail</Header>
             </div>
             <GrantInfo grant={grant}/>
         </Layout>

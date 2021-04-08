@@ -10,7 +10,7 @@ import Grant from "../../models/Grant";
 import { GrantStatus, Role } from "../../utils/enums";
 import React, { useEffect, useState } from "react";
 import { getWeb3Provider } from "../../utils/clientUtils";
-import { Button, Message } from "semantic-ui-react";
+import { Button, Header, Message } from "semantic-ui-react";
 import { getRwContract } from "../../ethereum/clientContract";
 import IsApplicant from "../../components/IsApplicant";
 import TransactionMessages from "../../components/TransactionMessages";
@@ -47,6 +47,9 @@ export default function ProjectDetail({ data, usdPerEth }){
 
   return <Layout>
       <IsApplicant>
+        <div style={{ textAlign: 'center'}}>
+          <Header>Project Detail</Header>
+        </div>
       <Application project={project} grant={grant}/>
       {
         isGrantOwner && <div style={{ display: 'flex', justifyContent: 'center '}}>

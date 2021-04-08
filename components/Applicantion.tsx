@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import { Button, Message, Table } from "semantic-ui-react";
 import Grant from "../models/Grant";
@@ -40,7 +41,7 @@ export default function Application(props: IProps) {
                     </Table.Row>
                     <Table.Row>
                             <Table.Cell textAlign='right'><b>Funding Opportunity Title</b></Table.Cell>
-                            <Table.Cell>{props.grant.title}</Table.Cell>
+                            <Table.Cell><Link href="/grants/[id]" as={`/grants/${props.grant.id}`}>{props.grant.title}</Link></Table.Cell>
                     </Table.Row>
                     <Table.Row>
                             <Table.Cell textAlign='right'><b>Agency</b></Table.Cell>

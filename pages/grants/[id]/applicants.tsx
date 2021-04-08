@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import Link from "next/link";
 import React from "react";
-import { Button, Icon, Table } from "semantic-ui-react";
+import { Button, Header, Icon, Table } from "semantic-ui-react";
 import Layout from "../../../components/Layout";
 import client from "../../../graphql/client";
 import { GET_GRANT_REQUESTS_FOR_GRANT } from "../../../graphql/queries";
@@ -12,6 +12,9 @@ export default function GrantApplicants({ data }) {
     const requests: GrantRequest[] = data.map(item => GrantRequest.parse(item));
 
     return <Layout>
+        <div style={{ textAlign: 'center'}}>
+            <Header>Applicants</Header>
+        </div>
         <Table>
             <Table.Header>
                 <Table.Row>
