@@ -15,7 +15,7 @@ export default class Project {
     }
 
     isAvailable(): boolean {
-        return this.grantRequest !== null && this.grantRequest !== undefined;
+        return this.grantRequest === null;
     }
 
     static parse(item) {

@@ -71,16 +71,16 @@ export default function Apply({ data, usdPerEth }){
                             options={projects.map(item => {
                                 return {
                                     key: item.id,
-                                    text: item.name,
+                                    text: `${item.name}${!item.isAvailable() ? ' (Unavailable)' : ''}`,
                                     value: item.id,
-                                    disabled: item.isAvailable()
+                                    disabled: !item.isAvailable()
                                 }
                             })}
                             onChange={(e, data) => _setSelectedProject(data.value as string)}
                         />
                     </Form.Field>
                     {
-                        projects.length === 0 && <Message>Don't have any project? Click <Link href="/projects/new">here</Link> to create one.</Message>
+                        projects.filter(item => item.isAvailable()).length === 0 && <Message>Don't have any project? Click <Link href="/projects/new">here</Link> to create one.</Message>
                     }
                     <Application project={selectedProject} grant={grant}/>
                     <Form.Field>
