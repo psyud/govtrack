@@ -5,15 +5,14 @@ import Layout from "../../components/Layout";
 import { getRwContract } from "../../ethereum/clientContract";
 import "react-datepicker/dist/react-datepicker.css";
 import { addDays } from "../../utils/datetimes";
-import { useRouter } from "next/router";
 import { BigNumber } from "@ethersproject/bignumber";
 import IsGrantor from "../../components/IsGrantor";
 import { getReadonlyContract } from "../../ethereum/serverContract";
 import { getWeb3Provider } from "../../utils/clientUtils";
+import TransactionMessages from "../../components/TransactionMessages";
 
 
 export default function NewGrant() {
-    const router = useRouter();
     const minDate = addDays(new Date(), 30);
     const [ submitting, setSubmitting ] = useState(false);
     const [ title, setTitle ] = useState('');
@@ -135,9 +134,7 @@ export default function NewGrant() {
             </Grid.Column>
             <Grid.Column width={4}></Grid.Column>
         </Grid>
-        {
-            txHashes.map(txHash => <Message key={txHash} style= {{ textAlign: 'center' }}>Your request is being processed. Tx Hash: {txHash}</Message>)
-        }
+        <TransactionMessages txHashes={txHashes}/>
     </IsGrantor>
     </Layout>
 }

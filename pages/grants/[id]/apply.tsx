@@ -13,6 +13,7 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { GetServerSideProps } from "next";
 import client from '../../../graphql/client';
 import { GET_APPLICANT_PROJECTS, GET_GRANT_BY_ID } from "../../../graphql/queries";
+import IsApplicant from "../../../components/IsApplicant";
 
 export default function Apply({ data, usdPerEth }){
     const grant = Grant.parse(data, usdPerEth);
@@ -58,6 +59,7 @@ export default function Apply({ data, usdPerEth }){
     const isFormValid = () => selectedProject && grant && agreedToTerms;
 
     return <Layout>
+        <IsApplicant>
         <Grid columns={3}>
             <Grid.Column width={4}></Grid.Column>
             <Grid.Column width={8}>
@@ -93,7 +95,7 @@ export default function Apply({ data, usdPerEth }){
             </Grid.Column>
             <Grid.Column width={4}></Grid.Column>
         </Grid>
-        
+        </IsApplicant>
     </Layout>
 }
 

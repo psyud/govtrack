@@ -1,7 +1,9 @@
 import { useRouter } from "next/router";
 import React, { Component, useState } from "react";
 import { Button, Checkbox, Dropdown, Form, Grid, Message, Table } from "semantic-ui-react";
+import IsApplicant from "../../components/IsApplicant";
 import Layout from "../../components/Layout";
+import TransactionMessages from "../../components/TransactionMessages";
 import { getRwContract } from "../../ethereum/clientContract";
 
 export default function NewProject(){
@@ -10,17 +12,23 @@ export default function NewProject(){
     const [ name, setName ] = useState('');
     const [ description, setDescription ] = useState('');
 
+    const [ txHashes, setTxHashes ] = useState([]);
     const [ isLoading, setIsLoading ] = useState(false);
 
-    const router = useRouter();
+    const resetForm = () => {
+        setAgreedToTerms(false);
+        setAddress('');
+        setName('');
+        setDescription('');
+    }
 
     const handleSubmit = async () => {
         const contract = await getRwContract();
         try{
             setIsLoading(true);
-            await contract.createProject(address, name, description);
-
-            router.push('/user');
+            const res = await contract.createProject(address, name, description);
+            setTxHashes(txHashes.concat(res.hash));
+            resetForm();
         }catch(e){
 
         }finally{
@@ -31,6 +39,7 @@ export default function NewProject(){
     const isFormValid = () => agreedToTerms && name.length > 0 && description.length > 0 && address.length > 0;
 
     return <Layout>
+        <IsApplicant>
         <Grid columns={3}>
             <Grid.Column width={4}></Grid.Column>
             <Grid.Column width={8}>
@@ -57,6 +66,8 @@ export default function NewProject(){
             </Grid.Column>
             <Grid.Column width={4}></Grid.Column>
         </Grid>
+        <TransactionMessages txHashes={txHashes}/>
+        </IsApplicant>
     </Layout>
 }
 
