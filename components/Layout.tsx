@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
 import Header from './Header';
@@ -23,9 +23,16 @@ interface IProps {
 export default function Layout(props: IProps) {
     const wallet = useSelector(selectWallet);
     const dispatch = useDispatch();
+    const [ registered, setRegistered ] = useState(false);
     
     useEffect(() => {
+        let mounted = true;
+
         (async () => {
+            if(!mounted){
+                return;
+            }
+
             dispatch(metaMaskInstalled(await isMetaMaskInstalled()));
             dispatch(walletConnected(await isWalletConnected()));
 
@@ -48,6 +55,9 @@ export default function Layout(props: IProps) {
         })();
 
         (async () => {
+            if(!mounted || registered){
+                return
+            }
             const provider = await getWeb3ProviderOrNull();
             if(provider){
                 provider.on('accountsChanged', () => {
@@ -57,7 +67,12 @@ export default function Layout(props: IProps) {
                     window.location.reload();
                 })
             }
+            setRegistered(true);
         })()
+
+        return function cleanup() {
+            mounted = false;
+        }
     })
 
     return <Container>

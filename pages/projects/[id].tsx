@@ -18,7 +18,7 @@ import { useRouter } from "next/router";
 
 export default function ProjectDetail({ data, usdPerEth }){
   const project = Project.parse(data);
-  const grant = Grant.parse(data.grantRequest.grant, usdPerEth);
+  const grant = data.grantRequest ? Grant.parse(data.grantRequest.grant, usdPerEth) : null;
   const [ isGrantOwner, setIsGrantOwner ] = useState(false);
   const [ isLoading, setIsLoading ] = useState(false);
   const router = useRouter();
@@ -26,7 +26,7 @@ export default function ProjectDetail({ data, usdPerEth }){
   useEffect(() => {
     (async () => {
       const provider = await getWeb3Provider();
-      setIsGrantOwner(provider.selectedAddress == grant.grantor?.id);
+      setIsGrantOwner(grant && provider.selectedAddress == grant.grantor?.id);
     })()
   }, [])
 
@@ -53,7 +53,7 @@ export default function ProjectDetail({ data, usdPerEth }){
         </div>
       }
       {
-        grant.status == GrantStatus.Closed && <div style={{ marginTop: '1em', display: 'flex', justifyContent: 'center '}}>
+        grant && grant.status == GrantStatus.Closed && <div style={{ marginTop: '1em', display: 'flex', justifyContent: 'center '}}>
           <Message>Grant has closed</Message>
         </div> 
       }

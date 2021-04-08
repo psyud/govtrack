@@ -14,8 +14,10 @@ import { GetServerSideProps } from "next";
 import client from '../../../graphql/client';
 import { GET_APPLICANT_PROJECTS, GET_GRANT_BY_ID } from "../../../graphql/queries";
 import IsApplicant from "../../../components/IsApplicant";
+import GrantRequest from "../../../models/GrantRequest";
+import TransactionMessages from "../../../components/TransactionMessages";
 
-export default function Apply({ data, usdPerEth }){
+export default function Apply({ id, data, usdPerEth }){
     const grant = Grant.parse(data, usdPerEth);
     const router = useRouter();
 
@@ -23,6 +25,7 @@ export default function Apply({ data, usdPerEth }){
     const [ selectedProject, setSelectedProject ] = useState(null);
     const [ agreedToTerms, setAgreedToTerms ] = useState(false);
     const [ isLoading, setIsLoading ] = useState(false);
+    const [ txHashes, setTxHashes ] = useState([]);
 
     useEffect(() => {
         (async() => {
@@ -33,10 +36,9 @@ export default function Apply({ data, usdPerEth }){
                     applicantId: provider.selectedAddress
                 }
             });
-            console.log(data.projects.map(item => Project.parse(item)))
             setProjects(data.projects.map(item => Project.parse(item)));
         })();
-    }, []);
+    }, []); // IMPORTANT OR INFINITE API CALLS
 
     const _setSelectedProject = (address: string) => {
         const filtered = projects.filter(i => i.id === address);
@@ -47,8 +49,19 @@ export default function Apply({ data, usdPerEth }){
         try{
             setIsLoading(true);
             const contract = await getRwContract();
-            await contract.requestGrant(selectedProject.id, grant.id);
-            router.push('/');
+            const res = await contract.requestGrant(selectedProject.id, grant.id);
+            setTxHashes(txHashes.concat(res.hash));
+
+            const updatedProjects = [];
+            for(let project of projects){
+                if(project.id == selectedProject.id){
+                    // just a hack cuz availability is calculated on null-ness
+                    project.grantRequest = undefined;
+                }
+                updatedProjects.push(project);
+            }
+            setProjects(updatedProjects);
+            resetForm();
         }catch(e){
 
         }finally{
@@ -56,10 +69,16 @@ export default function Apply({ data, usdPerEth }){
         }
     }
 
+    const resetForm = () => {
+        setSelectedProject(null);
+        setAgreedToTerms(false);
+    }
+
     const isFormValid = () => selectedProject && grant && agreedToTerms;
 
     return <Layout>
         <IsApplicant>
+        <Button onClick={() => router.push(`/grants/${id}`)}>Go back</Button>
         <Grid columns={3}>
             <Grid.Column width={4}></Grid.Column>
             <Grid.Column width={8}>
@@ -82,7 +101,7 @@ export default function Apply({ data, usdPerEth }){
                         />
                     </Form.Field>
                     {
-                        projects.filter(item => item.isAvailable()).length === 0 && <Message>Don't have any project? Click <Link href="/projects/new">here</Link> to create one.</Message>
+                        projects.filter(item => item.isAvailable()).length === 0 && <Message>Don't have any project? Click <Link href={`/projects/new?redirectUrl=/grants/${id}/apply`}>here</Link> to create one.</Message>
                     }
                     <Application project={selectedProject} grant={grant}/>
                     <Form.Field>
@@ -95,6 +114,7 @@ export default function Apply({ data, usdPerEth }){
             </Grid.Column>
             <Grid.Column width={4}></Grid.Column>
         </Grid>
+        <TransactionMessages txHashes={txHashes}/>
         </IsApplicant>
     </Layout>
 }
@@ -113,7 +133,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     return {
       props: {
         data: data.grant,
-        usdPerEth: usdPerEth.toNumber()
+        usdPerEth: usdPerEth.toNumber(),
+        id: ctx.query.id
       }
     }
   }

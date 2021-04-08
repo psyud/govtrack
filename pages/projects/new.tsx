@@ -1,3 +1,5 @@
+import { GetServerSideProps } from "next";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { Component, useState } from "react";
 import { Button, Checkbox, Dropdown, Form, Grid, Message, Table } from "semantic-ui-react";
@@ -6,7 +8,7 @@ import Layout from "../../components/Layout";
 import TransactionMessages from "../../components/TransactionMessages";
 import { getRwContract } from "../../ethereum/clientContract";
 
-export default function NewProject(){
+export default function NewProject({ redirectUrl }){
     const [ agreedToTerms, setAgreedToTerms ] = useState(false);
     const [ address, setAddress ] = useState('');
     const [ name, setName ] = useState('');
@@ -66,8 +68,22 @@ export default function NewProject(){
             </Grid.Column>
             <Grid.Column width={4}></Grid.Column>
         </Grid>
+        {
+            txHashes.length > 0 && redirectUrl && <Message style={{ textAlign: 'center' }}>
+                Your request is being processed. Once the transaction completes, click <Link href={redirectUrl}>here</Link> to go back to your application.
+            </Message>
+        }
+        
         <TransactionMessages txHashes={txHashes}/>
+        
         </IsApplicant>
     </Layout>
 }
 
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+    return {
+      props: {
+          redirectUrl: ctx.query.redirectUrl ?? null
+      }
+    }
+  }
