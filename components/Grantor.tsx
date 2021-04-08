@@ -1,4 +1,3 @@
-import { BigNumber } from "@ethersproject/bignumber";
 import Link from "next/link";
 import React, {  useEffect, useState } from "react";
 import { Button, Grid } from "semantic-ui-react";

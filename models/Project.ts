@@ -1,4 +1,5 @@
 import Applicant from "./Applicant";
+import Grant from "./Grant";
 import GrantRequest from "./GrantRequest";
 
 export default class Project {
@@ -7,6 +8,8 @@ export default class Project {
     description: string;
     grantRequest?: GrantRequest = null
     owner?: Applicant
+    balanceInUsd?: number
+    grant?: Grant
 
     constructor(id: string, name: string, description: string){
         this.id = id;
@@ -26,6 +29,10 @@ export default class Project {
 
         if(item.grantRequest) {
             project.grantRequest = new GrantRequest(item.grantRequest.id, item.grantRequest.status);
+            if(item.grantRequest.grant) {
+                const { grant } = item.grantRequest;
+                project.grant = new Grant(grant.id, grant.name, '', 0, grant.status, new Date(), new Date());
+            }
         }
 
         return project;
