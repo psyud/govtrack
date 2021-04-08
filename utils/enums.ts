@@ -29,7 +29,7 @@ export function toRequestStatusString(status: RequestStatus){
         case RequestStatus.Created:
             return 'Created';
         case RequestStatus.Approved:
-            return 'Closed';
+            return 'Approved';
         default:
             throw new Error('Unknown status');
     }

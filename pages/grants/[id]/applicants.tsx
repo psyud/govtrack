@@ -6,6 +6,7 @@ import Layout from "../../../components/Layout";
 import client from "../../../graphql/client";
 import { GET_GRANT_REQUESTS_FOR_GRANT } from "../../../graphql/queries";
 import GrantRequest from "../../../models/GrantRequest";
+import { toRequestStatusString } from "../../../utils/enums";
 
 export default function GrantApplicants({ data }) {
     const requests: GrantRequest[] = data.map(item => GrantRequest.parse(item));
@@ -31,7 +32,7 @@ export default function GrantApplicants({ data }) {
                             </Table.Cell>
                             <Table.Cell>{item.project.owner?.name}</Table.Cell>
                             <Table.Cell>{item.project?.description}</Table.Cell>
-                            <Table.Cell>{item.status}</Table.Cell>
+                            <Table.Cell>{toRequestStatusString(item.status)}</Table.Cell>
                         </Table.Row>
                     })
                 }
