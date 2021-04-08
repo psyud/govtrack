@@ -3,6 +3,7 @@ import React, { Component, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Dropdown, Form, Grid, Message } from "semantic-ui-react";
 import Layout from "../components/Layout";
+import RedirectIfLoggedIn from "../components/RedirectIfLoggedIn";
 import { getRwContract } from "../ethereum/clientContract";
 import { selectWallet, walletConnected } from "../slices/walletSlice";
 import { getWeb3Provider } from "../utils/clientUtils";
@@ -153,6 +154,7 @@ export default function SignUp() {
     }
 
     return <Layout>
+        <RedirectIfLoggedIn>
             <Grid>
                 <Grid.Column width={3}></Grid.Column>
                 <Grid.Column 
@@ -178,5 +180,6 @@ export default function SignUp() {
                 </Grid.Column>
                 <Grid.Column width={3}></Grid.Column>
             </Grid>
+        </RedirectIfLoggedIn>
         </Layout>
 }

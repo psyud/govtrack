@@ -1,13 +1,15 @@
-import React, { Component, useState } from "react";
-import { Button, Checkbox, Dropdown, Form, Grid, Message, Table } from "semantic-ui-react";
+import React, { useEffect, useState } from "react";
+import { Button, Checkbox, Dimmer, Form, Grid, Loader, Message, Table } from "semantic-ui-react";
 import DatePicker from 'react-datepicker';
 import Layout from "../../components/Layout";
 import { getRwContract } from "../../ethereum/clientContract";
 import "react-datepicker/dist/react-datepicker.css";
 import { addDays } from "../../utils/datetimes";
 import { useRouter } from "next/router";
-import { getReadonlyContract } from "../../ethereum/serverContract";
 import { BigNumber } from "@ethersproject/bignumber";
+import IsGrantor from "../../components/IsGrantor";
+import { getReadonlyContract } from "../../ethereum/serverContract";
+import { getWeb3Provider } from "../../utils/clientUtils";
 
 
 export default function NewGrant() {
@@ -20,6 +22,25 @@ export default function NewGrant() {
     const [ amount, setAmount ] = useState(0);
     const [ deadline, setDeadline ] = useState(minDate);
     const [ errorMessage, setErrorMessage ] = useState('');
+
+    const [ txHashes, setTxHashes ] = useState([]);
+
+    useEffect(()=>{
+        let mounted = true;
+        (async () => {
+            if(mounted){
+                const contract = await getReadonlyContract();
+                const provider = await getWeb3Provider();
+                contract.on('NewGrant', (a, b, c) => {
+                    console.log(a, b, c);
+                })
+            }
+        })();
+
+        return function cleanup(){
+            mounted = false;
+        }
+    }, []);
 
     const _setAmount = value => {
         try{
@@ -40,10 +61,11 @@ export default function NewGrant() {
             setSubmitting(true);
             
             const amountOfWeiToSend: BigNumber = await contract.usdToWei(amount);
-            await contract.createGrant(title, description, amount, Math.round(deadline.valueOf() / 1000), {
+            const res = await contract.createGrant(title, description, amount, Math.round(deadline.valueOf() / 1000), {
                 value: amountOfWeiToSend
             });
-            router.replace('/user');
+            setTxHashes(txHashes.concat(res.hash));
+            resetForm();
         }catch(e){
             setErrorMessage(e.message ?? 'Something went wrong');
             console.log(e.message);
@@ -52,7 +74,18 @@ export default function NewGrant() {
         }
     }
 
-    return  <Layout>
+    const resetForm = () => {
+        setSubmitting(false);
+        setTitle('');
+        setDescription('');
+        setAgreedToTerms(false);
+        setAmount(0);
+        setDeadline(minDate);
+        setErrorMessage('');
+    }
+
+    return <Layout>
+        <IsGrantor>
         <Grid columns={3}>
             <Grid.Column width={4}></Grid.Column>
             <Grid.Column width={8}>
@@ -97,8 +130,14 @@ export default function NewGrant() {
                         errorMessage.length > 0 && <Message error>{errorMessage}</Message>
                     }
                 </Form>
+            
+               
             </Grid.Column>
             <Grid.Column width={4}></Grid.Column>
         </Grid>
+        {
+            txHashes.map(txHash => <Message key={txHash} style= {{ textAlign: 'center' }}>Your request is being processed. Tx Hash: {txHash}</Message>)
+        }
+    </IsGrantor>
     </Layout>
 }

@@ -13,37 +13,14 @@ import {
 } from '../slices/walletSlice';
 import{ getReadOnlyContract } from "../ethereum/clientContract";
 import { Role } from "../utils/enums";
+import RedirectIfLoggedIn from "../components/RedirectIfLoggedIn";
 
 export default function SignIn() {
     const router = useRouter();
     const wallet = useSelector(selectWallet);
     const dispatch = useDispatch();
     const [ isConnecting, setIsConnecting ] = useState(false);
-    const [ redirectToSignUp, setRedirectToSignUp ] = useState(false);
-
-    useEffect(() => {
-        async function redirect(){
-            if(wallet.isWalletConnected){
-                const provider = await getWeb3Provider();
-    
-                const contract = await getReadOnlyContract();
-                const applicant = await contract.addressToApplicant(provider.selectedAddress);
-                if(applicant.isRegistered){
-                    dispatch(loggedIn(Role.Applicant));
-                    router.replace('/');
-                    return;
-                }
-                const grantor = await contract.addressToGrantor(provider.selectedAddress);
-                if(grantor.isRegistered){
-                    dispatch(loggedIn(Role.Grantor));
-                    router.replace('/');
-                    return;
-                }
-                setRedirectToSignUp(true);
-            }
-        }
-        redirect();
-    })
+    const [ redirectToSignUp ] = useState(wallet.isWalletConnected && !wallet.isLoggedIn);
 
     const connectWallet = async () => {
         try{
@@ -57,6 +34,7 @@ export default function SignIn() {
     }
 
     return <Layout>
+        <RedirectIfLoggedIn>
         <Grid>
             <Grid.Column width={3}></Grid.Column>
             <Grid.Column 
@@ -90,5 +68,6 @@ export default function SignIn() {
             </Grid.Column>
             <Grid.Column width={3}></Grid.Column>
         </Grid>
+        </RedirectIfLoggedIn>
     </Layout>
 }
