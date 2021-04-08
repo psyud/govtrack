@@ -65,8 +65,8 @@ contract GovTrack {
         RequestStatus status;
     }
     uint256 requestCounter;
+    mapping(address => Grant) projectToGrant;
     GrantRequest[] public requests;
-    mapping(address => GrantRequest) public projectToGrantRequest;
 
     event NewGrantRequest(uint256 id, address project, uint256 grantId, RequestStatus status);
     event UpdateGrantRequest(uint256 id, RequestStatus status);
@@ -82,9 +82,7 @@ contract GovTrack {
         Closed
     }
 
-    function registerAsApplicant(string memory _name, string memory _phoneNumber, string memory _emailAddress, string memory _physicalAddress) public {
-        require(!addressToApplicant[msg.sender].isRegistered, "You already registered as an applicant");
-        
+    function registerAsApplicant(string memory _name, string memory _phoneNumber, string memory _emailAddress, string memory _physicalAddress) public addressNotTaken(msg.sender) {        
         Applicant memory newApplicant = Applicant({
             id: msg.sender,
             name: _name,
@@ -102,9 +100,7 @@ contract GovTrack {
             newApplicant.physicalAddress);
     }
     
-    function registerAsGrantor(string memory _agencyName, string memory _agencyCode) public {
-        require(!addressToGrantor[msg.sender].isRegistered, "You already registered as a grantor");
-        
+    function registerAsGrantor(string memory _agencyName, string memory _agencyCode) public addressNotTaken(msg.sender) {        
         Grantor memory newGrantor = Grantor({
             id: msg.sender,
             agencyName: _agencyName,
@@ -115,10 +111,7 @@ contract GovTrack {
         emit NewGrantor(newGrantor.id, newGrantor.agencyName, newGrantor.agencyCode);
     }
 
-    function createProject(address payable _project, string memory _name, string memory _description) public {
-        require(addressToApplicant[msg.sender].isRegistered, "You have not registered as an applicant");
-        require(!addressToProject[_project].isRegistered, "Project has been registered");
-
+    function createProject(address payable _project, string memory _name, string memory _description) public addressNotTaken(_project){
         Project memory newProject = Project({
             id: _project,
             owner: msg.sender,
@@ -164,6 +157,10 @@ contract GovTrack {
         require(block.timestamp < grants[_grantId].deadlineTimestamp, "Grant has expired");
         require(addressToApplicant[msg.sender].isRegistered, "You have not registered as an applicant");
         require(addressToProject[_project].owner == msg.sender, "You do not own this project");
+
+        // Kind of a hack. To make sure a project can register for one grant only
+        // When it's not registered to any, the Grant in the mapping will have all values at default
+        require(projectToGrant[_project].isRegistered == false, "Project is not available for grant");
         
         GrantRequest memory newGrantRequest = GrantRequest({
             id: requestCounter,
@@ -173,7 +170,8 @@ contract GovTrack {
         });
         requestCounter += 1;
         requests.push(newGrantRequest);
-        projectToGrantRequest[newGrantRequest.project] = newGrantRequest;
+        projectToGrant[newGrantRequest.project] = grants[newGrantRequest.grantId];
+
         emit NewGrantRequest(newGrantRequest.id, newGrantRequest.project, newGrantRequest.grantId, newGrantRequest.status);
     }
     
@@ -211,6 +209,13 @@ contract GovTrack {
     modifier isGrantOwner(uint256 _grantId) {
         Grant storage grant = grants[_grantId];
         require(grant.grantor == msg.sender, "You do not own this grant");
+        _;
+    }
+
+    modifier addressNotTaken(address _address) {
+        require(!addressToApplicant[_address].isRegistered, "Address has been taken");
+        require(!addressToGrantor[_address].isRegistered, "Address has been taken");
+        require(!addressToProject[_address].isRegistered, "Address has been taken");
         _;
     }
 }
