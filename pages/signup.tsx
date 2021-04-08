@@ -1,17 +1,20 @@
 import { useRouter } from "next/router";
 import React, { Component, useState } from "react";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, Dropdown, Form, Grid, Message } from "semantic-ui-react";
 import Layout from "../components/Layout";
 import { getRwContract } from "../ethereum/clientContract";
-import { selectWallet } from "../slices/walletSlice";
+import { selectWallet, walletConnected } from "../slices/walletSlice";
 import { getWeb3Provider } from "../utils/clientUtils";
 import { Role } from "../utils/enums";
 
 export default function SignUp() {
     const wallet = useSelector(selectWallet);
     const router = useRouter();
+    const dispatch = useDispatch();
     
+    const [ isConnecting, setIsConnecting ] = useState(false);
+
     const [ signingUp, setSigningUp ] = useState(false);
     const [ selectedRole, setSelectedRole ] = useState(null);
     const [ errorMessage, setErrorMessage ] = useState('');
@@ -55,6 +58,18 @@ export default function SignUp() {
         }
     }
 
+
+    const connectWallet = async () => {
+        try{
+            setIsConnecting(true);
+            const provider = await getWeb3Provider();
+            await provider.enable();
+            dispatch(walletConnected(true));
+        }finally{
+            setIsConnecting(false);
+        }
+    }
+
     const renderForm = () => {
         return <>
             <Grid.Row>
@@ -73,7 +88,11 @@ export default function SignUp() {
                         }
                 ]}/>
                 {
-                    wallet.isMetaMaskInstalled && !wallet.isWalletConnected && <Button primary style={{ marginLeft: '1em' }}>Connect Wallet</Button>
+                    wallet.isMetaMaskInstalled && !wallet.isWalletConnected && <Button 
+                        loading={isConnecting}
+                        onClick={() => connectWallet()} 
+                        primary 
+                        style={{ marginLeft: '1em' }}>Connect Wallet</Button>
                 }
             </Grid.Row>
             <Grid.Row style={{

@@ -13,6 +13,17 @@ export enum RequestStatus {
     Approved
 }
 
+export function toRoleString(role: Role) {
+    switch(role){
+        case Role.Grantor:
+            return 'Grantor';
+        case Role.Applicant:
+            return 'Applicant';
+        default: 
+            throw new Error('Unknown role');
+    }
+}
+
 export function toGrantStatusString(status: GrantStatus){
     switch(status){
         case GrantStatus.Posted:

@@ -9,9 +9,10 @@ import {
     metaMaskInstalled,
     walletConnected,
     loggedIn,
-    selectWallet
+    selectWallet,
+    loadingFinished
 } from '../slices/walletSlice';
-import { getWeb3Provider, isMetaMaskInstalled, isWalletConnected } from '../utils/clientUtils';
+import { getWeb3Provider, getWeb3ProviderOrNull, isMetaMaskInstalled, isWalletConnected } from '../utils/clientUtils';
 import { getReadOnlyContract } from '../ethereum/clientContract';
 import { Role } from '../utils/enums';
 
@@ -22,8 +23,9 @@ interface IProps {
 export default function Layout(props: IProps) {
     const wallet = useSelector(selectWallet);
     const dispatch = useDispatch();
+    
     useEffect(() => {
-        async function _() {
+        (async () => {
             dispatch(metaMaskInstalled(await isMetaMaskInstalled()));
             dispatch(walletConnected(await isWalletConnected()));
 
@@ -42,8 +44,20 @@ export default function Layout(props: IProps) {
                     return;
                 }
             }
-        }
-        _()
+            dispatch(loadingFinished());
+        })();
+
+        (async () => {
+            const provider = await getWeb3ProviderOrNull();
+            if(provider){
+                provider.on('accountsChanged', () => {
+                    window.location.reload();
+                });
+                provider.on('chainChanged', () => {
+                    window.location.reload();
+                })
+            }
+        })()
     })
 
     return <Container>

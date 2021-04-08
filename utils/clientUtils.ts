@@ -21,7 +21,7 @@ export async function getWeb3Provider(): Promise<any> {
     return provider;
 }
 
-async function getWeb3ProviderOrNull() {
+export async function getWeb3ProviderOrNull(): Promise<any> {
     try{
         let provider = await detectProvider();
         if(!provider){

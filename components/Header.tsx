@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import React from 'react';
-import { Button, Input, Menu } from 'semantic-ui-react';
+import { Button, Input, Label, Menu } from 'semantic-ui-react';
 import { useSelector } from 'react-redux'
 import {
     selectWallet
 } from '../slices/walletSlice';
+import { toRoleString } from '../utils/enums';
 
  function Header() {
     const wallet = useSelector(selectWallet);
@@ -20,6 +21,10 @@ import {
             <Button style={{ marginLeft: '0.3em' }} primary icon='user'/>
         </Link>;
 
+        if(wallet.isLoading) {
+            return <Button loading disabled>Detecting</Button>
+        }
+
         if(!wallet.isWalletConnected){
             return <>
                 {signInButton}
@@ -34,7 +39,14 @@ import {
   
     return (
         <Menu style={{ marginTop: '1em' }}>
-        <Menu.Item>
+       
+        {
+            wallet.isLoggedInAs !== null && wallet.isLoggedInAs !== undefined && 
+            <Menu.Item>
+                <h4 style={{ color: 'grey' }}>Logged in as {toRoleString(wallet.isLoggedInAs)}</h4>
+            </Menu.Item>
+        }
+         <Menu.Item>
             <Link href="/">Home</Link>
         </Menu.Item>
         
