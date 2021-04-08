@@ -7,8 +7,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import { addDays } from "../../utils/datetimes";
 import { BigNumber } from "@ethersproject/bignumber";
 import IsGrantor from "../../components/IsGrantor";
-import { getReadonlyContract } from "../../ethereum/serverContract";
-import { getWeb3Provider } from "../../utils/clientUtils";
 import TransactionMessages from "../../components/TransactionMessages";
 
 
@@ -23,23 +21,6 @@ export default function NewGrant() {
     const [ errorMessage, setErrorMessage ] = useState('');
 
     const [ txHashes, setTxHashes ] = useState([]);
-
-    useEffect(()=>{
-        let mounted = true;
-        (async () => {
-            if(mounted){
-                const contract = await getReadonlyContract();
-                const provider = await getWeb3Provider();
-                contract.on('NewGrant', (a, b, c) => {
-                    console.log(a, b, c);
-                })
-            }
-        })();
-
-        return function cleanup(){
-            mounted = false;
-        }
-    }, []);
 
     const _setAmount = value => {
         try{
