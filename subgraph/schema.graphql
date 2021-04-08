@@ -46,17 +46,17 @@ type GrantRequest @entity {
   grant: Grant!
 }
 
-type _Schema_ 
-  @fulltext (
-    name: "grantSearch",
-    language: en,
-    algorithm: rank,
-    include: [
-      {
-        entity: "Grant",
-        fields: [
-          { name: "name" }
-        ]
-      }
-    ]
-  )
+# type _Schema_ 
+#   @fulltext (
+#     name: "grantSearch",
+#     language: en,
+#     algorithm: rank,
+#     include: [
+#       {
+#         entity: "Grant",
+#         fields: [
+#           { name: "name" }
+#         ]
+#       }
+#     ]
+#   )

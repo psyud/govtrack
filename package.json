@@ -8,14 +8,15 @@
   },
   "scripts": {
     "dev": "next dev",
+    "dev-local": "export ENV=local && next dev",
     "build": "next build",
     "start": "next start",
     "sg-codegen": "cd subgraph && graph codegen",
     "sg-build": "cd subgraph && graph build",
     "sg-deploy": "cd subgraph && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ xrenegad3/govtrack",
-    "sg-create-local": "graph create --node http://localhost:8020/ xrenegad3/govtrack",
-    "sg-remove-local": "graph remove --node http://localhost:8020/ xrenegad3/govtrack",
-    "sg-deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 xrenegad3/govtrack"
+    "sg-create-local": "cd subgraph && graph create --node http://localhost:8020/ xrenegad3/govtrack",
+    "sg-remove-local": "cd subgraph && graph remove --node http://localhost:8020/ xrenegad3/govtrack",
+    "sg-deploy-local": "cd subgraph && graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 xrenegad3/govtrack"
   },
   "repository": {
     "type": "git",
