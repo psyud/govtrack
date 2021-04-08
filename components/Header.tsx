@@ -52,7 +52,7 @@ import { toRoleString } from '../utils/enums';
         
         <Menu.Menu position='right'>
             <Menu.Item>
-            <Input icon='search' placeholder='Search...' />
+            <Input icon='search' placeholder='Search... Coming Soon' />
             </Menu.Item>
             <Menu.Item>
                 {

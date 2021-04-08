@@ -3,10 +3,12 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { Component, useState } from "react";
 import { Button, Checkbox, Dropdown, Form, Grid, Message, Table } from "semantic-ui-react";
+import ErrorMessage from "../../components/ErrorMessage";
 import IsApplicant from "../../components/IsApplicant";
 import Layout from "../../components/Layout";
 import TransactionMessages from "../../components/TransactionMessages";
 import { getRwContract } from "../../ethereum/clientContract";
+import { GENERIC_ERROR_MESSAGE } from "../../utils/constants";
 
 export default function NewProject({ redirectUrl }){
     const [ agreedToTerms, setAgreedToTerms ] = useState(false);
@@ -17,7 +19,10 @@ export default function NewProject({ redirectUrl }){
     const [ txHashes, setTxHashes ] = useState([]);
     const [ isLoading, setIsLoading ] = useState(false);
 
+    const [ errMsg, setErrMsg ] = useState(null);
+
     const resetForm = () => {
+        setErrMsg(null);
         setAgreedToTerms(false);
         setAddress('');
         setName('');
@@ -27,12 +32,13 @@ export default function NewProject({ redirectUrl }){
     const handleSubmit = async () => {
         const contract = await getRwContract();
         try{
+            setErrMsg(null);
             setIsLoading(true);
             const res = await contract.createProject(address, name, description);
             setTxHashes(txHashes.concat(res.hash));
             resetForm();
         }catch(e){
-
+            setErrMsg(e.data && e.data.message || GENERIC_ERROR_MESSAGE)
         }finally{
             setIsLoading(false);
         }
@@ -68,6 +74,9 @@ export default function NewProject({ redirectUrl }){
             </Grid.Column>
             <Grid.Column width={4}></Grid.Column>
         </Grid>
+        {
+            errMsg && <ErrorMessage error={errMsg}/>
+        }
         {
             txHashes.length > 0 && redirectUrl && <Message style={{ textAlign: 'center' }}>
                 Your request is being processed. Once the transaction completes, click <Link href={redirectUrl}>here</Link> to go back to your application.

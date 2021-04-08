@@ -9,18 +9,22 @@ import Layout from "../components/Layout";
 import {
     walletConnected,
     selectWallet,
-    loggedIn
 } from '../slices/walletSlice';
-import{ getReadOnlyContract } from "../ethereum/clientContract";
-import { Role } from "../utils/enums";
 import RedirectIfLoggedIn from "../components/RedirectIfLoggedIn";
 
 export default function SignIn() {
-    const router = useRouter();
     const wallet = useSelector(selectWallet);
     const dispatch = useDispatch();
     const [ isConnecting, setIsConnecting ] = useState(false);
-    const [ redirectToSignUp ] = useState(wallet.isWalletConnected && !wallet.isLoggedIn);
+    const [ redirectToSignUp, setRedirectToSignUp ] = useState(false);
+
+    useEffect(() => {
+        (async () => {
+            if(wallet.isWalletConnected && !wallet.isLoggedIn){
+                setRedirectToSignUp(true)
+            }
+        })()
+    })
 
     const connectWallet = async () => {
         try{
@@ -60,7 +64,7 @@ export default function SignIn() {
                     </Grid.Row><br/>
                     <Grid.Row>
                     {
-                        redirectToSignUp && <Message error>
+                        redirectToSignUp && <Message error style={{ textAlign: 'center' }}>
                             Seems like you have not registered. Please go to <Link href='/signup'>Sign Up</Link> instead.
                         </Message>
                     }

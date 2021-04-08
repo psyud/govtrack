@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import React, { Component, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Dropdown, Form, Grid, Message } from "semantic-ui-react";
+import ErrorMessage from "../components/ErrorMessage";
 import Layout from "../components/Layout";
 import RedirectIfLoggedIn from "../components/RedirectIfLoggedIn";
 import TransactionMessages from "../components/TransactionMessages";
@@ -180,7 +181,7 @@ export default function SignUp() {
                         </Grid.Row>
                     <Grid.Row style={{ marginTop: '0.5em' }}>
                         {
-                            errorMessage.length > 0 && <Message error>{errorMessage}</Message>
+                            errorMessage.length > 0 && <ErrorMessage error={errorMessage}/>
                         }
                     </Grid.Row>
                     </Grid.Column>

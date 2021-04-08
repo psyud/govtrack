@@ -8,6 +8,7 @@ import { addDays } from "../../utils/datetimes";
 import { BigNumber } from "@ethersproject/bignumber";
 import IsGrantor from "../../components/IsGrantor";
 import TransactionMessages from "../../components/TransactionMessages";
+import ErrorMessage from "../../components/ErrorMessage";
 
 
 export default function NewGrant() {
@@ -107,7 +108,7 @@ export default function NewGrant() {
                         >Submit</Button>
                     </div>
                     {
-                        errorMessage.length > 0 && <Message error>{errorMessage}</Message>
+                        errorMessage.length > 0 && <ErrorMessage error={errorMessage}/> 
                     }
                 </Form>
             

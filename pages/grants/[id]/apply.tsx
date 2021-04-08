@@ -16,6 +16,8 @@ import { GET_APPLICANT_PROJECTS, GET_GRANT_BY_ID } from "../../../graphql/querie
 import IsApplicant from "../../../components/IsApplicant";
 import GrantRequest from "../../../models/GrantRequest";
 import TransactionMessages from "../../../components/TransactionMessages";
+import { GENERIC_ERROR_MESSAGE } from "../../../utils/constants";
+import ErrorMessage from "../../../components/ErrorMessage";
 
 export default function Apply({ id, data, usdPerEth }){
     const grant = Grant.parse(data, usdPerEth);
@@ -26,6 +28,8 @@ export default function Apply({ id, data, usdPerEth }){
     const [ agreedToTerms, setAgreedToTerms ] = useState(false);
     const [ isLoading, setIsLoading ] = useState(false);
     const [ txHashes, setTxHashes ] = useState([]);
+
+    const [ errMsg, setErrMsg ] = useState(null);
 
     useEffect(() => {
         (async() => {
@@ -47,6 +51,7 @@ export default function Apply({ id, data, usdPerEth }){
 
     const handleSubmit = async () => {
         try{
+            setErrMsg(null);
             setIsLoading(true);
             const contract = await getRwContract();
             const res = await contract.requestGrant(selectedProject.id, grant.id);
@@ -63,7 +68,7 @@ export default function Apply({ id, data, usdPerEth }){
             setProjects(updatedProjects);
             resetForm();
         }catch(e){
-
+            setErrMsg(e.data && e.data.message || GENERIC_ERROR_MESSAGE)
         }finally{
             setIsLoading(false);
         }
@@ -114,6 +119,9 @@ export default function Apply({ id, data, usdPerEth }){
             </Grid.Column>
             <Grid.Column width={4}></Grid.Column>
         </Grid>
+        {
+            errMsg && <ErrorMessage error={errMsg}/>
+        }
         <TransactionMessages txHashes={txHashes}/>
         </IsApplicant>
     </Layout>
