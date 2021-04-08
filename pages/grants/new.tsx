@@ -49,7 +49,6 @@ export default function NewGrant() {
             resetForm();
         }catch(e){
             setErrorMessage(e.message ?? 'Something went wrong');
-            console.log(e.message);
         }finally{
             setSubmitting(false);
         }

@@ -8,7 +8,7 @@ import RedirectIfLoggedIn from "../components/RedirectIfLoggedIn";
 import TransactionMessages from "../components/TransactionMessages";
 import { getRwContract } from "../ethereum/clientContract";
 import { selectWallet, walletConnected } from "../slices/walletSlice";
-import { getWeb3Provider } from "../utils/clientUtils";
+import { getWeb3Provider, isWalletConnected } from "../utils/clientUtils";
 import { Role } from "../utils/enums";
 
 export default function SignUp() {
@@ -78,20 +78,22 @@ export default function SignUp() {
     const renderForm = () => {
         return <>
             <Grid.Row>
-                <Dropdown 
-                    onChange={(e,d) => setSelectedRole(d.value)}
-                    placeholder='Sign Up as' options={[
-                        {
-                            'text': 'Grantor',
-                            'key': Role.Grantor,
-                            'value': Role.Grantor
-                        },
-                        {
-                            'text': 'Applicant',
-                            'key': Role.Applicant,
-                            'value': Role.Applicant
-                        }
-                ]}/>
+                {
+                    wallet.isWalletConnected && <Dropdown 
+                        onChange={(e,d) => setSelectedRole(d.value)}
+                        placeholder='Sign Up as' options={[
+                            {
+                                'text': 'Grantor',
+                                'key': Role.Grantor,
+                                'value': Role.Grantor
+                            },
+                            {
+                                'text': 'Applicant',
+                                'key': Role.Applicant,
+                                'value': Role.Applicant
+                            }
+                    ]}/>
+                }
                 {
                     wallet.isMetaMaskInstalled && !wallet.isWalletConnected && <Button 
                         loading={isConnecting}
@@ -100,11 +102,14 @@ export default function SignUp() {
                         style={{ marginLeft: '1em' }}>Connect Wallet</Button>
                 }
             </Grid.Row>
-            <Grid.Row style={{
-                paddingTop: '1em'
-            }}>
-                {renderRoleSpecificForm(selectedRole)}
-            </Grid.Row>
+            {
+                wallet.isWalletConnected && <Grid.Row style={{
+                    paddingTop: '1em'
+                }}>
+                    {renderRoleSpecificForm(selectedRole)}
+                </Grid.Row>
+            }
+            
         </>
     }
 

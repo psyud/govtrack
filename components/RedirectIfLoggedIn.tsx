@@ -8,7 +8,6 @@ export default function IsGrantor(props) {
     const router = useRouter();
 
     useEffect(() => {
-        console.log(isLoggedIn)
         if(isLoggedIn){
             router.replace('/')
         }

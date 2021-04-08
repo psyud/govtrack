@@ -23,7 +23,6 @@ export default function (props: IProps) {
 
     <Table.Body>
         {props.data.map((item: Project) => {
-            console.log(item.grant)
             return <Table.Row key={item.id} 
                 positive={item.grantRequest?.status == RequestStatus.Approved}
             >
