@@ -25,7 +25,7 @@ export default class Project {
         }
 
         if(item.grantRequest) {
-            project.grantRequest = new GrantRequest(item.id, item.status);
+            project.grantRequest = new GrantRequest(item.grantRequest.id, item.grantRequest.status);
         }
 
         return project;

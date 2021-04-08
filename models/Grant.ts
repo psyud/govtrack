@@ -1,4 +1,4 @@
-import { toGrantStatusString } from "../utils/enums";
+import { GrantStatus, toGrantStatusString } from "../utils/enums";
 import { BigNumber } from "@ethersproject/bignumber";
 import { weiToUsd } from "../utils/numbers";
 import Grantor from "./Grantor";
@@ -8,12 +8,12 @@ export default class Grant {
     title: string;
     description: string;
     grantor?: Grantor
-    status: string;
+    status: GrantStatus;
     createdAt: Date;
     closedAt: Date;
     amountInUsd: number;
 
-    constructor(id: number, title: string, description: string, amountInUsd: number, status: string, createdAt: Date, closedAt: Date) {
+    constructor(id: number, title: string, description: string, amountInUsd: number, status: GrantStatus, createdAt: Date, closedAt: Date) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -29,7 +29,7 @@ export default class Grant {
             item.name, 
             item.description,
             weiToUsd(BigNumber.from(item.amountInWei), BigNumber.from(usdPerEth)),
-            toGrantStatusString(item.status), 
+            item.status, 
             new Date(Number.parseInt(item.createdAt.toString()) * 1000), 
             new Date(Number.parseInt(item.deadlineTimestamp.toString()) * 1000)
         )

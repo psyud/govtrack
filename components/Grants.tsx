@@ -4,6 +4,7 @@ import React from "react"
 import { Table } from "semantic-ui-react"
 import Grant from "../models/Grant";
 import { DATE_FORMAT } from "../utils/constants";
+import { toGrantStatusString } from "../utils/enums";
 
 interface IProps {
     grants: Grant[]
@@ -35,7 +36,7 @@ export default function (props: IProps) {
                     </Link>
                 </Table.Cell>
                 <Table.Cell>{item.grantor?.agencyName}</Table.Cell>
-                <Table.Cell>{item.status}</Table.Cell>
+                <Table.Cell>{toGrantStatusString(item.status)}</Table.Cell>
                 <Table.Cell>{moment(item.createdAt).format(DATE_FORMAT)}</Table.Cell>
                 <Table.Cell>{moment(item.closedAt).format(DATE_FORMAT)}</Table.Cell>
                 <Table.Cell>${item.amountInUsd.toLocaleString()}</Table.Cell>
