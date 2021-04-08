@@ -5,14 +5,14 @@ import { selectWallet } from "../slices/walletSlice";
 import { Role } from "../utils/enums";
 
 export default function IsGrantor(props) {
-    const { isLoading, isLoggedInAs } = useSelector(selectWallet);
+    const { isLoading, isLoggedIn, isLoggedInAs } = useSelector(selectWallet);
     const router = useRouter();
 
     useEffect(() => {
         if(isLoading === false){
             return;
         }
-        if(isLoggedInAs !== null && isLoggedInAs !== Role.Grantor){
+        if(!isLoggedIn || isLoggedInAs !== null && isLoggedInAs !== Role.Grantor){
             router.replace('/')
         }
     })
