@@ -7,21 +7,20 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { GET_PROJECT_BY_ID } from "../../graphql/queries";
 import Project from "../../models/Project";
 import Grant from "../../models/Grant";
-import { selectWallet } from "../../slices/walletSlice";
-import { useSelector } from "react-redux";
 import { GrantStatus, Role } from "../../utils/enums";
 import React, { useEffect, useState } from "react";
 import { getWeb3Provider } from "../../utils/clientUtils";
 import { Button, Message } from "semantic-ui-react";
 import { getRwContract } from "../../ethereum/clientContract";
-import { useRouter } from "next/router";
+import IsApplicant from "../../components/IsApplicant";
+import TransactionMessages from "../../components/TransactionMessages";
 
 export default function ProjectDetail({ data, usdPerEth }){
   const project = Project.parse(data);
-  const grant = data.grantRequest ? Grant.parse(data.grantRequest.grant, usdPerEth) : null;
   const [ isGrantOwner, setIsGrantOwner ] = useState(false);
   const [ isLoading, setIsLoading ] = useState(false);
-  const router = useRouter();
+  const [ txHash, setTxHash ] = useState(null);
+  const [ grant, setGrant ] = useState(data.grantRequest ? Grant.parse(data.grantRequest.grant, usdPerEth) : null);
 
   useEffect(() => {
     (async () => {
@@ -34,9 +33,10 @@ export default function ProjectDetail({ data, usdPerEth }){
     try {
       setIsLoading(true);
       const contract = await getRwContract();
-      console.log(project);
       await contract.approveRequest(project.grantRequest?.id);
-      router.back();
+      setTxHash(txHash);
+      grant.status = GrantStatus.Closed;
+      setGrant(grant);
     }catch(e){
       console.error(e);
     }finally{
@@ -46,17 +46,22 @@ export default function ProjectDetail({ data, usdPerEth }){
 
 
   return <Layout>
+      <IsApplicant>
       <Application project={project} grant={grant}/>
       {
         isGrantOwner && <div style={{ display: 'flex', justifyContent: 'center '}}>
           <Button onClick={() => handleApproval()} disabled={isLoading || grant.status == GrantStatus.Closed } color='red'>APPROVE</Button>
-        </div>
+      </div>
+      }
+      {
+        txHash && <TransactionMessages txHashes={[txHash]}/>
       }
       {
         grant && grant.status == GrantStatus.Closed && <div style={{ marginTop: '1em', display: 'flex', justifyContent: 'center '}}>
           <Message>Grant has closed</Message>
         </div> 
       }
+      </IsApplicant>
   </Layout>
 }
 

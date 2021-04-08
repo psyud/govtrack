@@ -97,17 +97,19 @@ export const GET_PROJECT_BY_ID = gql`
 
 export const GET_GRANT_REQUESTS_FOR_GRANT = gql`
 query getGrantRequestsForGrant($grantId: ID!) {
-        grantRequests(grant: $grantId) {
-            id
-            project {
-                id,
-                name,
-                description,
-                owner {
-                    name
+        grant(id: $grantId) {
+            grantRequests(grant: $grantId) {
+                id
+                project {
+                    id,
+                    name,
+                    description,
+                    owner {
+                        name
+                    }
                 }
+                status
             }
-            status
         }
     }
 `

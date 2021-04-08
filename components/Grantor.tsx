@@ -25,7 +25,7 @@ export default function Grantor() {
 
             setGrants(data.grantor.grants.map(item => Grant.parse(item, usdPerEth)));
         })();
-    })
+    }, [])
 
     return <>
         <Grid>

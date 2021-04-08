@@ -6,7 +6,7 @@ import Layout from "../../../components/Layout";
 import client from "../../../graphql/client";
 import { GET_GRANT_REQUESTS_FOR_GRANT } from "../../../graphql/queries";
 import GrantRequest from "../../../models/GrantRequest";
-import { toRequestStatusString } from "../../../utils/enums";
+import { RequestStatus, toRequestStatusString } from "../../../utils/enums";
 
 export default function GrantApplicants({ data }) {
     const requests: GrantRequest[] = data.map(item => GrantRequest.parse(item));
@@ -24,7 +24,10 @@ export default function GrantApplicants({ data }) {
             <Table.Body>
                 {
                     requests.map(item => {
-                        return <Table.Row key={item.id}>
+                        return <Table.Row 
+                            key={item.id} 
+                            positive={item.status == RequestStatus.Approved}
+                        >
                             <Table.Cell>
                                 <Link href="/projects/[id]" as={`/projects/${item.project?.id}`}>
                                     {item.project?.name}
@@ -50,7 +53,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     });
     return {
       props: {
-        data: data.grantRequests,
+        data: data.grant.grantRequests,
       }
     }
   }
