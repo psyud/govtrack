@@ -4,7 +4,7 @@ import { Button } from "semantic-ui-react";
 import GrantInfo from "../../../components/GrantInfo";
 import Layout from "../../../components/Layout"
 import { getReadonlyContract } from "../../../ethereum/serverContract";
-import GrantOpportunity from "../../../models/GrantOppurtunity";
+import Grant from "../../../models/Grant";
 import {
     selectWallet
 } from '../../../slices/walletSlice';
@@ -23,7 +23,7 @@ export interface IProps {
 
 export default function GrantDetail({ id, data, usdPerEth }) {
     const { isLoggedInAs, isLoggedIn } = useSelector(selectWallet);
-    const grant = GrantOpportunity.parse(data, usdPerEth)
+    const grant = Grant.parse(data, usdPerEth)
 
     return <Layout>
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>

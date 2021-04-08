@@ -6,7 +6,7 @@ import Application from "../../../components/Applicantion";
 import Layout from "../../../components/Layout";
 import { getReadOnlyContract, getRwContract } from "../../../ethereum/clientContract";
 import { getReadonlyContract as getServerContract } from "../../../ethereum/serverContract";
-import GrantOpportunity from "../../../models/GrantOppurtunity";
+import Grant from "../../../models/Grant";
 import Project from "../../../models/Project";
 import { getWeb3Provider } from "../../../utils/clientUtils";
 import { BigNumber } from "@ethersproject/bignumber";
@@ -15,7 +15,7 @@ import client from '../../../graphql/client';
 import { GET_APPLICANT_PROJECTS, GET_GRANT_BY_ID } from "../../../graphql/queries";
 
 export default function Apply({ data, usdPerEth }){
-    const grant = GrantOpportunity.parse(data, usdPerEth);
+    const grant = Grant.parse(data, usdPerEth);
     const router = useRouter();
 
     const [ projects, setProjects ] = useState([] as Project[]);

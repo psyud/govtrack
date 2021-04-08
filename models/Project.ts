@@ -1,18 +1,17 @@
+import Applicant from "./Applicant";
+import GrantRequest from "./GrantRequest";
+
 export default class Project {
-    
     id: string;
     name: string;
     description: string;
     grantRequest?: GrantRequest = null
+    owner?: Applicant
 
-    constructor(id: string,name: string, description: string, grantRequest){
+    constructor(id: string, name: string, description: string){
         this.id = id;
         this.name = name;
         this.description = description;
-
-        if(grantRequest){
-            grantRequest = new GrantRequest(grantRequest.id, grantRequest.status)
-        }
     }
 
     isAvailable(): boolean {
@@ -20,16 +19,16 @@ export default class Project {
     }
 
     static parse(item) {
-        return new Project(item.id, item.name, item.description, item.grantRequest);
+        const project = new Project(item.id, item.name, item.description);
+        if(item.owner) {
+            project.owner = new Applicant(item.owner.name);
+        }
+
+        if(item.grantRequest) {
+            project.grantRequest = new GrantRequest(item.id, item.status);
+        }
+
+        return project;
     }
 }
 
-class GrantRequest {
-    id: string
-    status: string
-
-    constructor(id: string, status: string){
-        this.id = id;
-        this.status = status;
-    }
-}

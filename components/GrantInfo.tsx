@@ -1,11 +1,11 @@
 import moment from "moment";
 import React, { Component, useEffect } from "react";
 import { Grid, Table } from "semantic-ui-react";
-import GrantOpportunity from "../models/GrantOppurtunity";
+import Grant from "../models/Grant";
 import { DATE_FORMAT } from "../utils/constants";
 
 interface IProps {
-    grant: GrantOpportunity
+    grant: Grant
 }
 
 export default function GrantInfo(props: IProps) {
@@ -77,7 +77,7 @@ export default function GrantInfo(props: IProps) {
                     <Table.Body>
                         <Table.Row>
                             <Table.Cell textAlign='right'><b>Agency Name</b></Table.Cell>
-                            <Table.Cell>{grant.agencyName}</Table.Cell>
+                            <Table.Cell>{grant.grantor?.agencyName}</Table.Cell>
                         </Table.Row>
                         <Table.Row>
                             <Table.Cell textAlign='right'><b>Description</b></Table.Cell>

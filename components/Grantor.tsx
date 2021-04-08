@@ -3,14 +3,14 @@ import Link from "next/link";
 import React, {  useEffect, useState } from "react";
 import { Button, Grid } from "semantic-ui-react";
 import { GET_GRANTOR_BY_ID } from "../graphql/queries";
-import GrantOpportunity from "../models/GrantOppurtunity";
+import Grant from "../models/Grant";
 import { getWeb3Provider } from "../utils/clientUtils";
 import Grants from "./Grants";
 import client from '../graphql/client';
 import { getReadOnlyContract } from "../ethereum/clientContract";
 
 export default function Grantor() {
-    const [ grants, setGrants ] = useState([] as GrantOpportunity[]);
+    const [ grants, setGrants ] = useState([] as Grant[]);
     
     useEffect(() => {
         (async () => {
@@ -23,7 +23,7 @@ export default function Grantor() {
                 }
             });
 
-            setGrants(data.grantor.grants.map(item => GrantOpportunity.parse(item, usdPerEth)));
+            setGrants(data.grantor.grants.map(item => Grant.parse(item, usdPerEth)));
         })();
     })
 

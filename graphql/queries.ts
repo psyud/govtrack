@@ -68,20 +68,43 @@ export const GET_APPLICANT_PROJECTS = gql`
     }
 `
 
-export const GET_GRANT_REQUESTS_FOR_PROJECT = gql`
-    query getGrantRequestsForProject($projectId: ID!) {
-        grantRequests(project: $projectId) {
-            grant {
+export const GET_PROJECT_BY_ID = gql`
+    query getProjectById($projectId: ID!) {
+        project(id: $projectId) {
+            id,
+            name,
+            description,
+            grantRequest {
+                id
+                grant {
+                    id
+                    grantor {
+                        id
+                        agencyCode
+                        agencyName
+                    }
+                    name
+                    description
+                    amountInWei
+                    status
+                    createdAt
+                    deadlineTimestamp
+                }
+            }
+        }
+    }
+`
+
+export const GET_GRANT_REQUESTS_FOR_GRANT = gql`
+query getGrantRequestsForGrant($grantId: ID!) {
+        grantRequests(grant: $grantId) {
+            id
+            project {
                 id,
                 name,
                 description,
-                amountInWei,
-                createdAt,
-                deadlineTimestamp,
-                status,
-                grantor {
-                    agencyName,
-                    agencyCode
+                owner {
+                    name
                 }
             }
             status

@@ -4,12 +4,12 @@ import Layout from '../components/Layout';
 import { GetServerSideProps } from 'next';
 import client from '../graphql/client';
 import { GET_GRANTS } from '../graphql/queries';
-import GrantOpportunity from '../models/GrantOppurtunity';
+import Grant from '../models/Grant';
 import { getReadonlyContract } from '../ethereum/serverContract';
 import { BigNumber } from '@ethersproject/bignumber';
 
 export default function Index ({ data, usdPerEth }) {
-  const grants = data.map(item =>  GrantOpportunity.parse(item, usdPerEth));
+  const grants = data.map(item =>  Grant.parse(item, usdPerEth));
 
   return <Layout>
     <Grants grants={grants}/>

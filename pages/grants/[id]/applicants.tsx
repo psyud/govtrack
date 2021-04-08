@@ -1,55 +1,55 @@
-import React, { Component } from "react";
-import { Button, Checkbox, Form, Icon, Table } from "semantic-ui-react";
-import { IProps } from ".";
+import { GetServerSideProps } from "next";
+import Link from "next/link";
+import React from "react";
+import { Button, Icon, Table } from "semantic-ui-react";
 import Layout from "../../../components/Layout";
+import client from "../../../graphql/client";
+import { GET_GRANT_REQUESTS_FOR_GRANT } from "../../../graphql/queries";
+import GrantRequest from "../../../models/GrantRequest";
 
-export default class GrantApplicants extends Component<IProps>{
-    static async getInitialProps(props: any) {
-        const { id } = props.query;
-        if(typeof id === 'undefined'){
-            return {};
-        }
+export default function GrantApplicants({ data }) {
+    const requests: GrantRequest[] = data.map(item => GrantRequest.parse(item));
 
-        return {
-            id
-        }
-    }
-
-    render() {
-        return <Layout>
-            <Table>
-                <Table.Header>
-                    <Table.Row>
-                            <Table.Cell>Project Name</Table.Cell>
-                            <Table.Cell>Project Owner</Table.Cell>
-                            <Table.Cell>Winner</Table.Cell>
-                    </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                    <Table.Row>
-                        <Table.Cell>Project Catalyst</Table.Cell>
-                        <Table.Cell>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi elementum massa eget tellus faucibus, at blandit leo ullamcorper. Vivamus leo dolor, lobortis ut viverra at, aliquam id nulla. Fusce efficitur.</Table.Cell>
-                        <Table.Cell>
-                            <Icon color='green' name='checkmark' size='large' />
-                        </Table.Cell>
-                    </Table.Row>
-                    <Table.Row>
-                        <Table.Cell>Project Catalyst</Table.Cell>
-                        <Table.Cell>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi elementum massa eget tellus faucibus, at blandit leo ullamcorper. Vivamus leo dolor, lobortis ut viverra at, aliquam id nulla. Fusce efficitur.</Table.Cell>
-                        <Table.Cell>
-                            <Icon color='red' name='close' size='large' />
-                        </Table.Cell>
-                    </Table.Row>
-                    <Table.Row>
-                        <Table.Cell>Project Catalyst</Table.Cell>
-                        <Table.Cell>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi elementum massa eget tellus faucibus, at blandit leo ullamcorper. Vivamus leo dolor, lobortis ut viverra at, aliquam id nulla. Fusce efficitur.</Table.Cell>
-                        <Table.Cell>
-                            <Icon color='yellow' name='question circle' size='large' />
-                        </Table.Cell>
-                    </Table.Row>
-                    
-                </Table.Body>
-            </Table>
-        </Layout>
-    }
+    return <Layout>
+        <Table>
+            <Table.Header>
+                <Table.Row>
+                        <Table.Cell>Project Name</Table.Cell>
+                        <Table.Cell>Project Owner</Table.Cell>
+                        <Table.Cell>Project Description</Table.Cell>
+                        <Table.Cell>Request Status</Table.Cell>
+                </Table.Row>
+            </Table.Header>
+            <Table.Body>
+                {
+                    requests.map(item => {
+                        return <Table.Row key={item.id}>
+                            <Table.Cell>
+                                <Link href="/projects/[id]" as={`/projects/${item.project?.id}`}>
+                                    {item.project?.name}
+                                </Link>
+                            </Table.Cell>
+                            <Table.Cell>{item.project.owner?.name}</Table.Cell>
+                            <Table.Cell>{item.project?.description}</Table.Cell>
+                            <Table.Cell>{item.status}</Table.Cell>
+                        </Table.Row>
+                    })
+                }
+            </Table.Body>
+        </Table>
+    </Layout>
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+    const { data } = await client.query({ 
+        query: GET_GRANT_REQUESTS_FOR_GRANT,
+        variables: {
+            grantId: ctx.query.id
+        }
+    });
+    return {
+      props: {
+        data: data.grantRequests,
+      }
+    }
+  }

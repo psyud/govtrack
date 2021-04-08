@@ -1,12 +1,12 @@
 import React from "react";
 import { Button, Message, Table } from "semantic-ui-react";
-import GrantOpportunity from "../models/GrantOppurtunity";
+import Grant from "../models/Grant";
 import Project from "../models/Project";
 import Layout from "./Layout";
 
 interface IProps {
     project?: Project;
-    grant?: GrantOpportunity
+    grant?: Grant
 }
 
 export default function Application(props: IProps) {
@@ -44,7 +44,7 @@ export default function Application(props: IProps) {
                     </Table.Row>
                     <Table.Row>
                             <Table.Cell textAlign='right'><b>Agency</b></Table.Cell>
-                            <Table.Cell>{props.grant.agencyName}</Table.Cell>
+                            <Table.Cell>{props.grant.grantor?.agencyName}</Table.Cell>
                     </Table.Row>
                 </Table.Body>
             </Table> 
