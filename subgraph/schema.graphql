@@ -14,7 +14,7 @@ type Project @entity {
   description: String!
 
   owner: Applicant!
-  grantRequest: GrantRequest
+  grantRequest: GrantRequest @derivedFrom(field: "project")
 }
 
 type Grantor @entity {

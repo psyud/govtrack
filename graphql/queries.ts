@@ -61,7 +61,9 @@ export const GET_APPLICANT_PROJECTS = gql`
             id,
             name,
             description,
-            grantRequest
+            grantRequest {
+                id
+            }
         }
     }
 `

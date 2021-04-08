@@ -60,7 +60,7 @@ export function handleNewGrantRequest(event: NewGrantRequest): void {
 
     request.status = event.params.status;
     request.project = event.params.project.toHex();
-    request.grant = event.params.grantId.toHex();
+    request.grant = event.params.grantId.toString();
 
     request.save();
 }

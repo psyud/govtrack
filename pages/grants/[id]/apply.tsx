@@ -32,6 +32,7 @@ export default function Apply({ data, usdPerEth }){
                     applicantId: provider.selectedAddress
                 }
             });
+            console.log(data.projects.map(item => Project.parse(item)))
             setProjects(data.projects.map(item => Project.parse(item)));
         })();
     }, []);
