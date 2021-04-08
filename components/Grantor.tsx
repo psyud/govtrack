@@ -21,7 +21,6 @@ export default function Grantor() {
                     grantorId: provider.selectedAddress
                 }
             });
-
             setGrants(data.grantor.grants.map(item => Grant.parse(item, usdPerEth)));
         })();
     }, [])

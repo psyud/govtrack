@@ -5,5 +5,10 @@ const { publicRuntimeConfig } = getConfig();
 
 export default new ApolloClient({ 
     uri: publicRuntimeConfig.SUBGRAPH_API, 
-    cache: new InMemoryCache()
+    cache: new InMemoryCache(),
+    defaultOptions: {
+        query: {
+            fetchPolicy: 'no-cache'
+        }
+    }
 });

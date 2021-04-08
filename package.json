@@ -11,6 +11,7 @@
     "dev-local": "export ENV=local && next dev",
     "build": "next build",
     "start": "next start",
+    "start-local": "export ENV=local && next start",
     "sg-codegen": "cd subgraph && graph codegen",
     "sg-build": "cd subgraph && graph build",
     "sg-deploy": "cd subgraph && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ xrenegad3/govtrack",
