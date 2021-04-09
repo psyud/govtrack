@@ -33,6 +33,7 @@
     "@apollo/client": "^3.3.14",
     "@chainlink/contracts": "^0.1.6",
     "@graphprotocol/graph-cli": "0.20.0",
+    "@graphprotocol/graph-ts": "^0.20.0",
     "@metamask/detect-provider": "^1.2.0",
     "@reduxjs/toolkit": "^1.5.1",
     "@truffle/hdwallet-provider": "^1.2.6",
