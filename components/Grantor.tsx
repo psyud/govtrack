@@ -3,7 +3,7 @@ import React, {  useEffect, useState } from "react";
 import { Button, Grid, Header } from "semantic-ui-react";
 import { GET_GRANTOR_BY_ID } from "../graphql/queries";
 import Grant from "../models/Grant";
-import { getWeb3Provider } from "../utils/clientUtils";
+import { getSelectedAddress, getWeb3Provider } from "../utils/clientUtils";
 import Grants from "./Grants";
 import client from '../graphql/client';
 import { getReadOnlyContract } from "../ethereum/clientContract";
@@ -13,12 +13,11 @@ export default function Grantor() {
     
     useEffect(() => {
         (async () => {
-            const provider = await getWeb3Provider();
             const usdPerEth = await (await getReadOnlyContract()).getUsdPerEth();
             const {data} = await client.query({
                 query: GET_GRANTOR_BY_ID,
                 variables: {
-                    grantorId: provider.selectedAddress
+                    grantorId: await getSelectedAddress()
                 }
             });
             setGrants(data.grantor.grants.map(item => Grant.parse(item, usdPerEth)));

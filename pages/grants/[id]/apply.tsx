@@ -8,7 +8,7 @@ import { getReadOnlyContract, getRwContract } from "../../../ethereum/clientCont
 import { getReadonlyContract as getServerContract } from "../../../ethereum/serverContract";
 import Grant from "../../../models/Grant";
 import Project from "../../../models/Project";
-import { getWeb3Provider } from "../../../utils/clientUtils";
+import { getSelectedAddress, getWeb3Provider } from "../../../utils/clientUtils";
 import { BigNumber } from "@ethersproject/bignumber";
 import { GetServerSideProps } from "next";
 import client from '../../../graphql/client';
@@ -33,11 +33,10 @@ export default function Apply({ id, data, usdPerEth }){
 
     useEffect(() => {
         (async() => {
-            const provider = await getWeb3Provider();
             const { data } = await client.query({
                 query: GET_APPLICANT_PROJECTS,
                 variables: {
-                    applicantId: provider.selectedAddress
+                    applicantId: await getSelectedAddress()
                 }
             });
             setProjects(data.projects.map(item => Project.parse(item)));

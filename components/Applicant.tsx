@@ -2,7 +2,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { Button, Grid } from "semantic-ui-react";
 import Project from "../models/Project";
-import { getEthBalance, getWeb3Provider } from "../utils/clientUtils";
+import { getEthBalance, getSelectedAddress, getWeb3Provider } from "../utils/clientUtils";
 import Projects from "./Projects";
 import client from '../graphql/client';
 import { GET_APPLICANT_PROJECTS } from "../graphql/queries";
@@ -18,14 +18,13 @@ export default function Applicant() {
             if(!mounted){
                 return;
             }
-            const provider = await getWeb3Provider();
             const contract = await getReadOnlyContract();
             const usdPerEth = await contract.getUsdPerEth();
 
             const { data } = await client.query({
                 query: GET_APPLICANT_PROJECTS,
                 variables: {
-                    applicantId: provider.selectedAddress
+                    applicantId: await getSelectedAddress()
                 }
             })
 

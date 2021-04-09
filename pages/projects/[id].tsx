@@ -9,7 +9,7 @@ import Project from "../../models/Project";
 import Grant from "../../models/Grant";
 import { GrantStatus, Role } from "../../utils/enums";
 import React, { useEffect, useState } from "react";
-import { getWeb3Provider } from "../../utils/clientUtils";
+import { getSelectedAddress, getWeb3Provider } from "../../utils/clientUtils";
 import { Button, Header, Message } from "semantic-ui-react";
 import { getRwContract } from "../../ethereum/clientContract";
 import IsApplicant from "../../components/IsApplicant";
@@ -24,8 +24,7 @@ export default function ProjectDetail({ data, usdPerEth }){
 
   useEffect(() => {
     (async () => {
-      const provider = await getWeb3Provider();
-      setIsGrantOwner(grant && provider.selectedAddress == grant.grantor?.id);
+      setIsGrantOwner(grant && await getSelectedAddress() == grant.grantor?.id);
     })()
   }, [])
 

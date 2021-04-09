@@ -12,7 +12,7 @@ import {
     selectWallet,
     loadingFinished
 } from '../slices/walletSlice';
-import { getWeb3Provider, getWeb3ProviderOrNull, isMetaMaskInstalled, isWalletConnected } from '../utils/clientUtils';
+import { getSelectedAddress, getWeb3Provider, getWeb3ProviderOrNull, isMetaMaskInstalled, isWalletConnected } from '../utils/clientUtils';
 import { getReadOnlyContract } from '../ethereum/clientContract';
 import { Role } from '../utils/enums';
 
@@ -37,15 +37,15 @@ export default function Layout(props: IProps) {
             dispatch(walletConnected(await isWalletConnected()));
 
             if(wallet.isWalletConnected){
-                const provider = await getWeb3Provider()
+                const address = await getSelectedAddress();
                 const contract = await getReadOnlyContract();
 
-                let result = await contract.addressToApplicant(provider.selectedAddress);
+                let result = await contract.addressToApplicant(address);
                 if(result.isRegistered){
                     dispatch(loggedIn(Role.Applicant));
                     return;
                 }
-                result = await contract.addressToGrantor(provider.selectedAddress);
+                result = await contract.addressToGrantor(address);
                 if(result.isRegistered){
                     dispatch(loggedIn(Role.Grantor));
                     return;
