@@ -77,13 +77,13 @@ module.exports = {
       provider: () => new HDWalletProvider(mnemonic, `https://kovan.infura.io/v3/${infuraKey}`),
       network_id: 42,    
       skipDryRun: true,  
-      timeoutBlocks: 1000
+      timeoutBlocks: 2000
     },
     rinkeby: {
       provider: () => new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/v3/${infuraKey}`),
       network_id: 4,
       skipDryRun: true, 
-      timeoutBlocks: 1000   
+      timeoutBlocks: 2000   
     }
   },
 
