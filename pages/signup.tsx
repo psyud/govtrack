@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { Component, useState } from "react";
+import React, { Component, useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Dropdown, Form, Grid, Message } from "semantic-ui-react";
 import ErrorMessage from "../components/ErrorMessage";
@@ -7,14 +7,22 @@ import Layout from "../components/Layout";
 import RedirectIfLoggedIn from "../components/RedirectIfLoggedIn";
 import TransactionMessages from "../components/TransactionMessages";
 import { getRwContract } from "../ethereum/clientContract";
+import { resetPage, selectPage, signUp } from "../slices/pageSlice";
 import { selectWallet, walletConnected } from "../slices/walletSlice";
-import { getWeb3Provider, isWalletConnected } from "../utils/clientUtils";
+import { getWeb3Provider } from "../utils/clientUtils";
 import { Role } from "../utils/enums";
 
 export default function SignUp() {
     const wallet = useSelector(selectWallet);
-    const router = useRouter();
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(signUp());
+
+        return function cleanup(){
+            dispatch(resetPage());
+        }
+    })
     
     const [ isConnecting, setIsConnecting ] = useState(false);
 
@@ -195,3 +203,4 @@ export default function SignUp() {
         </RedirectIfLoggedIn>
         </Layout>
 }
+

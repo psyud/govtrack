@@ -6,9 +6,11 @@ import {
     selectWallet
 } from '../slices/walletSlice';
 import { toRoleString } from '../utils/enums';
+import { selectPage } from '../slices/pageSlice';
 
  function Header() {
     const wallet = useSelector(selectWallet);
+    const { isSignIn, isSignUp } = useSelector(selectPage);
 
     const renderButtons = () => {
         const signInButton = <Link href='/signin'>
@@ -27,11 +29,13 @@ import { toRoleString } from '../utils/enums';
 
         if(!wallet.isWalletConnected){
             return <>
-                {signInButton}
-                {signUpButton}
+                {!isSignIn && signInButton}
+                {!isSignUp && signUpButton}
             </>
         }else if(!wallet.isLoggedIn){
-            return signUpButton;
+            return <>
+                {!isSignUp && signUpButton}
+            </>
         }else{
             return userButton;
         }

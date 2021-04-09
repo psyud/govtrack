@@ -11,19 +11,28 @@ import {
     selectWallet,
 } from '../slices/walletSlice';
 import RedirectIfLoggedIn from "../components/RedirectIfLoggedIn";
+import { resetPage, signIn } from "../slices/pageSlice";
 
 export default function SignIn() {
     const wallet = useSelector(selectWallet);
     const dispatch = useDispatch();
+
     const [ isConnecting, setIsConnecting ] = useState(false);
     const [ redirectToSignUp, setRedirectToSignUp ] = useState(false);
 
     useEffect(() => {
+        dispatch(signIn());
+
         (async () => {
+
             if(wallet.isWalletConnected && !wallet.isLoggedIn){
                 setRedirectToSignUp(true)
             }
         })()
+
+        return function cleanup(){
+            dispatch(resetPage())
+        }
     })
 
     const connectWallet = async () => {
