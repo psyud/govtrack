@@ -6,7 +6,7 @@ dataSources:
     name: Contract
     network: rinkeby
     source:
-      address: "0xD9C46313a712A307F63f89AdE6020C31b005d193"
+      address: "0xA591adB6d44ae3B3dABC855773Df192c22cf998D"
       abi: Contract
       startBlock: 8380197
     mapping:
